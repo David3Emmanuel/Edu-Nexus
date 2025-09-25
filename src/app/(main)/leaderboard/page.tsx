@@ -2,149 +2,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import Link from 'next/link'
-
-// Mock leaderboard data
-const topContributors = [
-  {
-    id: 1,
-    rank: 1,
-    name: 'Aisha Johnson',
-    avatar: 'AJ',
-    type: 'Student',
-    university: 'MIT',
-    skillCoins: 2847,
-    badges: 12,
-    contributions: 45,
-    topBadges: [
-      { title: 'Top Contributor', icon: '🏆', gradient: 'blue' as const },
-      { title: 'Problem Solver', icon: '💡', gradient: 'green' as const },
-      { title: 'Mentor', icon: '🎓', gradient: 'purple' as const },
-    ],
-    weeklyGain: 234,
-    specialties: ['Machine Learning', 'Data Science'],
-  },
-  {
-    id: 2,
-    rank: 2,
-    name: 'Dr. Marcus Chen',
-    avatar: 'MC',
-    type: 'Lecturer',
-    university: 'Stanford',
-    skillCoins: 2156,
-    badges: 9,
-    contributions: 38,
-    topBadges: [
-      { title: 'Expert', icon: '⭐', gradient: 'orange' as const },
-      { title: 'Innovator', icon: '💡', gradient: 'green' as const },
-    ],
-    weeklyGain: 198,
-    specialties: ['Software Engineering', 'AI'],
-  },
-  {
-    id: 3,
-    rank: 3,
-    name: 'Sofia Rodriguez',
-    avatar: 'SR',
-    type: 'Student',
-    university: 'UC Berkeley',
-    skillCoins: 1923,
-    badges: 8,
-    contributions: 42,
-    topBadges: [
-      { title: 'Team Player', icon: '🤝', gradient: 'blue' as const },
-      { title: 'Rising Star', icon: '🌟', gradient: 'orange' as const },
-    ],
-    weeklyGain: 156,
-    specialties: ['Sustainable Design', 'Engineering'],
-  },
-  {
-    id: 4,
-    rank: 4,
-    name: 'Prof. Elena Wang',
-    avatar: 'EW',
-    type: 'Lecturer',
-    university: 'Harvard',
-    skillCoins: 1784,
-    badges: 11,
-    contributions: 29,
-    topBadges: [
-      { title: 'Mentor', icon: '🎓', gradient: 'purple' as const },
-      { title: 'Knowledge Expert', icon: '📚', gradient: 'blue' as const },
-    ],
-    weeklyGain: 143,
-    specialties: ['Business Strategy', 'Innovation'],
-  },
-  {
-    id: 5,
-    rank: 5,
-    name: 'James Thompson',
-    avatar: 'JT',
-    type: 'Student',
-    university: 'Oxford',
-    skillCoins: 1652,
-    badges: 7,
-    contributions: 35,
-    topBadges: [
-      { title: 'Quick Solver', icon: '⚡', gradient: 'orange' as const },
-      { title: 'Helpful', icon: '💪', gradient: 'green' as const },
-    ],
-    weeklyGain: 128,
-    specialties: ['Mathematics', 'Physics'],
-  },
-]
-
-// Generate more users for the full leaderboard
-const generateMoreUsers = () => {
-  const names = [
-    'Alex Kim',
-    'Sarah Miller',
-    'David Park',
-    'Emma Wilson',
-    'Ryan Lee',
-    'Maya Patel',
-    'Chris Brown',
-    'Lisa Zhang',
-  ]
-  const universities = [
-    'Yale',
-    'Princeton',
-    'Columbia',
-    'UPenn',
-    'Cornell',
-    'NYU',
-    'UCLA',
-    'USC',
-  ]
-  const specialties = [
-    ['Chemistry', 'Biology'],
-    ['Psychology', 'Neuroscience'],
-    ['Economics', 'Finance'],
-    ['Environmental Science', 'Climate'],
-    ['Art', 'Design'],
-    ['Philosophy', 'Ethics'],
-    ['Marketing', 'Communications'],
-    ['Medicine', 'Health'],
-  ]
-
-  return names.map((name, index) => ({
-    id: index + 6,
-    rank: index + 6,
-    name,
-    avatar: name
-      .split(' ')
-      .map((n) => n[0])
-      .join(''),
-    type: Math.random() > 0.5 ? 'Student' : 'Lecturer',
-    university: universities[index],
-    skillCoins: 1500 - index * 120 - Math.floor(Math.random() * 100),
-    badges: Math.floor(Math.random() * 8) + 2,
-    contributions: Math.floor(Math.random() * 30) + 15,
-    weeklyGain: Math.floor(Math.random() * 100) + 30,
-    specialties: specialties[index],
-  }))
-}
-
-const allUsers = [...topContributors, ...generateMoreUsers()]
+import { User, topContributors, allUsers } from '@/api'
 
 export default function Leaderboard() {
   return (
@@ -183,11 +41,9 @@ export default function Leaderboard() {
                 </p>
                 <SkillCoin count={topContributors[1].skillCoins} size='md' />
                 <div className='flex justify-center gap-2 mt-4'>
-                  {topContributors[1].topBadges
-                    .slice(0, 2)
-                    .map((badge, index) => (
-                      <Badge key={index} {...badge} size='sm' />
-                    ))}
+                  {topContributors[1].badges.slice(0, 2).map((badge, index) => (
+                    <Badge key={index} {...badge} size='sm' />
+                  ))}
                 </div>
               </div>
             </div>
@@ -218,7 +74,7 @@ export default function Leaderboard() {
                   showAnimation
                 />
                 <div className='flex justify-center gap-2 mt-4'>
-                  {topContributors[0].topBadges.map((badge, index) => (
+                  {topContributors[0].badges.map((badge, index) => (
                     <Badge key={index} {...badge} size='sm' />
                   ))}
                 </div>
@@ -244,7 +100,7 @@ export default function Leaderboard() {
                 </p>
                 <SkillCoin count={topContributors[2].skillCoins} size='md' />
                 <div className='flex justify-center gap-2 mt-4'>
-                  {topContributors[2].topBadges.map((badge, index) => (
+                  {topContributors[2].badges.map((badge, index) => (
                     <Badge key={index} {...badge} size='sm' />
                   ))}
                 </div>
@@ -305,9 +161,9 @@ export default function Leaderboard() {
                   <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Badges
                   </th>
-                  <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+                  {/* TODO <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Contributions
-                  </th>
+                  </th> */}
                   <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                     Specialties
                   </th>
@@ -368,15 +224,15 @@ export default function Leaderboard() {
 
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <span className='text-sm font-medium text-text-dark'>
-                        {user.badges}
+                        {user.badges.length}
                       </span>
                     </td>
 
-                    <td className='px-6 py-4 whitespace-nowrap'>
+                    {/* TODO <td className='px-6 py-4 whitespace-nowrap'>
                       <span className='text-sm text-gray-600'>
                         {user.contributions}
                       </span>
-                    </td>
+                    </td> */}
 
                     <td className='px-6 py-4'>
                       <div className='flex flex-wrap gap-1'>

@@ -134,6 +134,65 @@ export const topContributors: User[] = [
   },
 ]
 
+const generateMoreUsers = () => {
+  const names = [
+    'Alex Kim',
+    'Sarah Miller',
+    'David Park',
+    'Emma Wilson',
+    'Ryan Lee',
+    'Maya Patel',
+    'Chris Brown',
+    'Lisa Zhang',
+  ]
+  const universities = [
+    'Yale',
+    'Princeton',
+    'Columbia',
+    'UPenn',
+    'Cornell',
+    'NYU',
+    'UCLA',
+    'USC',
+  ]
+  const specialties = [
+    ['Chemistry', 'Biology'],
+    ['Psychology', 'Neuroscience'],
+    ['Economics', 'Finance'],
+    ['Environmental Science', 'Climate'],
+    ['Art', 'Design'],
+    ['Philosophy', 'Ethics'],
+    ['Marketing', 'Communications'],
+    ['Medicine', 'Health'],
+  ]
+
+  return names.map(
+    (name, index) =>
+      ({
+        id: index + 6,
+        rank: index + 6,
+        name,
+        avatar: name
+          .split(' ')
+          .map((n) => n[0])
+          .join(''),
+        type: Math.random() > 0.5 ? 'Student' : 'Lecturer',
+        university: universities[index],
+        skillCoins: 1500 - index * 120 - Math.floor(Math.random() * 100),
+        badges: [
+          { title: 'Rising Star', icon: '🌟', gradient: 'purple' },
+          { title: 'Collaborator', icon: '🤝', gradient: 'blue' },
+        ],
+        // contributions: Math.floor(Math.random() * 30) + 15,
+        weeklyGain: Math.floor(Math.random() * 100) + 30,
+        weeklyRank: index + 6,
+        specialties: specialties[index],
+      } satisfies User),
+  )
+}
+
+export const allUsers = [...topContributors, ...generateMoreUsers()]
+
 // API functions for users
 export const getUserProfile = async (userId: number): Promise<User> => {
   // Simulate API delay
@@ -144,7 +203,7 @@ export const getUserProfile = async (userId: number): Promise<User> => {
   }
 
   // Return a user from leaderboard for other IDs
-  const user = topContributors.find((u: User) => u.id === userId)
+  const user = allUsers.find((u: User) => u.id === userId)
   if (user) {
     return user
   }
@@ -161,5 +220,5 @@ export const getCurrentUser = async (): Promise<User> => {
 export const getLeaderboard = async (limit: number = 10): Promise<User[]> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 400))
-  return topContributors.slice(0, limit)
+  return allUsers.slice(0, limit)
 }
