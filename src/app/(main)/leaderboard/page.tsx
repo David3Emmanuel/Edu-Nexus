@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import Link from 'next/link'
-import { User, topContributors, allUsers } from '@/api'
+import { User, getTopContributors, getAllUsers } from '@/api'
+import Image from 'next/image'
 
 // Helper function to get initials from name
 function getInitials(name: string): string {
@@ -34,7 +35,7 @@ function Avatar({
 
   if (user.avatar) {
     return (
-      <img
+      <Image
         src={user.avatar}
         alt={user.name}
         className={`${baseClasses} object-cover`}
@@ -51,7 +52,10 @@ function Avatar({
   )
 }
 
-export default function Leaderboard() {
+export default async function Leaderboard() {
+  const topContributors = await getTopContributors()
+  const allUsers = await getAllUsers()
+
   return (
     <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -223,7 +227,7 @@ export default function Leaderboard() {
                 </tr>
               </thead>
               <tbody className='divide-y divide-gray-200'>
-                {allUsers.map((user, index) => (
+                {allUsers.map((user) => (
                   <tr
                     key={user.id}
                     className='hover:bg-gray-50 transition-colors'

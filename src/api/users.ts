@@ -119,12 +119,34 @@ const fetchMoreUsers = async () => {
   const response = await fetch(
     'https://68d58d52e29051d1c0aefbcd.mockapi.io/users_',
   )
-  const data = await response.json()
+  let data = await response.json()
+
+  // Ensure the fetched data has the required properties
+  data = data.map((user: Partial<User>) => ({
+    ...user,
+    rank: user.rank || 0,
+    skillCoins: user.skillCoins || 0,
+    weeklyRank: user.weeklyRank || 0,
+    badges: user.badges || [],
+  }))
+
   return data as User[]
 }
 
-export const allUsers = [...manuallyAddedUsers, ...(await fetchMoreUsers())]
-export const topContributors = allUsers.slice(0, 3)
+let allUsersCache: User[] | null = null
+
+export const getAllUsers = async (): Promise<User[]> => {
+  if (!allUsersCache) {
+    const moreUsers = await fetchMoreUsers()
+    allUsersCache = [...manuallyAddedUsers, ...moreUsers]
+  }
+  return allUsersCache
+}
+
+export const getTopContributors = async (): Promise<User[]> => {
+  const users = await getAllUsers()
+  return users.slice(0, 3)
+}
 
 // API functions for users
 export const getUserProfile = async (userId: number): Promise<User> => {
@@ -136,7 +158,8 @@ export const getUserProfile = async (userId: number): Promise<User> => {
   }
 
   // Return a user from leaderboard for other IDs
-  const user = allUsers.find((u: User) => u.id === userId)
+  const users = await getAllUsers()
+  const user = users.find((u: User) => u.id === userId)
   if (user) {
     return user
   }
@@ -153,5 +176,6 @@ export const getCurrentUser = async (): Promise<User> => {
 export const getLeaderboard = async (limit: number = 10): Promise<User[]> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 400))
-  return allUsers.slice(0, limit)
+  const users = await getAllUsers()
+  return users.slice(0, limit)
 }

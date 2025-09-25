@@ -66,14 +66,14 @@ export default function ForgotPasswordPage() {
               Check Your Email
             </h1>
             <p className='text-gray-600 mb-8'>
-              We've sent a password reset link to <strong>{email}</strong>
+              We&apos;ve sent a password reset link to <strong>{email}</strong>
             </p>
           </div>
 
           <div className='bg-white rounded-xl shadow-lg p-8 text-center'>
             <p className='text-gray-600 mb-6'>
-              Didn't receive the email? Check your spam folder or click below to
-              resend.
+              Didn&apos;t receive the email? Check your spam folder or click
+              below to resend.
             </p>
 
             <Button
@@ -105,7 +105,7 @@ export default function ForgotPasswordPage() {
             Forgot Password?
           </h1>
           <p className='text-gray-600'>
-            No worries! Enter your email and we'll send you a reset link.
+            No worries! Enter your email and we&apos;ll send you a reset link.
           </p>
         </div>
 

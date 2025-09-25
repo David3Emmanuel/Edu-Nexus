@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
-import Link from 'next/link'
 
 // Mock user profile data
 const userProfile = {

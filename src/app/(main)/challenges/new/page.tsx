@@ -403,7 +403,9 @@ export default function NewChallengePage() {
             💡 Tips for a Great Challenge
           </h3>
           <ul className='space-y-2 text-blue-800 text-sm'>
-            <li>• Be specific about what you're looking for in a solution</li>
+            <li>
+              • Be specific about what you&apos;re looking for in a solution
+            </li>
             <li>• Include relevant context and constraints</li>
             <li>• Use clear, professional language</li>
             <li>• Add appropriate tags to help others find your challenge</li>

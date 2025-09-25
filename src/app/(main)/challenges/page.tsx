@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
 import { getChallenges } from '@/api'

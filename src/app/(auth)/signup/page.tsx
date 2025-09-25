@@ -333,7 +333,7 @@ export default function SignupPage() {
         {/* Benefits Section */}
         <div className='bg-white rounded-xl shadow-lg p-6 mt-8'>
           <h3 className='text-lg font-bold text-gray-900 mb-4 text-center'>
-            What you'll get with EduNexus
+            What you&apos;ll get with EduNexus
           </h3>
           <div className='space-y-3'>
             <div className='flex items-center text-sm text-gray-700'>

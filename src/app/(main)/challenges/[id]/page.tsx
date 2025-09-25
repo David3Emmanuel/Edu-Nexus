@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
 import Link from 'next/link'
@@ -21,9 +20,10 @@ async function getChallengeData(id: number): Promise<Challenge> {
     notFound()
   }
 }
-export default async function ChallengeDetail({
-  params,
-}: ChallengeDetailPageProps) {
+export default async function ChallengeDetail(
+  props: Promise<ChallengeDetailPageProps>,
+) {
+  const { params } = await props
   const challengeId = parseInt(params.id, 10)
 
   if (isNaN(challengeId)) {
@@ -205,7 +205,7 @@ export default async function ChallengeDetail({
               </div>
 
               <div className='space-y-8'>
-                {challengeData.responses.map((response, index) => {
+                {challengeData.responses.map((response) => {
                   const isTopAnswer = response.id === topAnswerId
                   return (
                     <div key={response.id} className='relative'>
