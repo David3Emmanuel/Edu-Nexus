@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import { ChallengePayload, createChallenge, getCurrentUser, User } from '@/api'
+import { useRouter } from 'next/navigation'
 
 const difficultyOptions = [
   {
@@ -19,27 +21,44 @@ const difficultyOptions = [
     color: 'bg-yellow-100 text-yellow-800',
   },
   { value: 'Advanced', label: 'Advanced', color: 'bg-red-100 text-red-800' },
-]
+] as const
 
 const categoryOptions = [
   { value: 'Academic Q&A', label: 'Academic Q&A' },
   { value: 'Real-world Challenge', label: 'Real-world Challenge' },
   { value: 'Research Project', label: 'Research Project' },
   { value: 'Case Study', label: 'Case Study' },
-]
+] as const
 
 export default function NewChallengePage() {
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getCurrentUser()
+      setUser(user)
+    }
+
+    fetchUser()
+  }, [])
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     difficulty: 'Intermediate',
     category: 'Academic Q&A',
     skillCoins: 30,
-    tags: '',
-  })
+    tags: [],
+    author: user?.name || '',
+    authorType: user?.type || 'Student',
+    authorBio: '',
+  } as ChallengePayload)
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -58,6 +77,11 @@ export default function NewChallengePage() {
         ...prev,
         [name]: '',
       }))
+    }
+
+    // Clear submit error when user makes changes
+    if (submitError) {
+      setSubmitError(null)
     }
   }
 
@@ -92,27 +116,27 @@ export default function NewChallengePage() {
     }
 
     setIsSubmitting(true)
+    setSubmitError(null)
+    setSubmitSuccess(false)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      const data = await createChallenge(formData)
 
-      // In a real app, you would submit the data to your API here
-      console.log('Challenge created:', formData)
+      setSubmitSuccess(true)
 
-      // Redirect to challenges page (or show success message)
-      window.location.href = '/challenges'
+      // Show success message briefly before redirecting
+      setTimeout(() => {
+        router.push(`/challenges/${data.id}`)
+      }, 1500)
     } catch (error) {
       console.error('Error creating challenge:', error)
+      setSubmitError(
+        error instanceof Error ? error.message : 'An unexpected error occurred',
+      )
     } finally {
       setIsSubmitting(false)
     }
   }
-
-  const tagArray = formData.tags
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0)
 
   return (
     <div className='min-h-screen bg-neutral-50 py-8'>
@@ -135,10 +159,68 @@ export default function NewChallengePage() {
           </p>
         </div>
 
+        {/* Error Message */}
+        {submitError && (
+          <div className='bg-red-50 border border-red-200 rounded-lg p-4 mb-6'>
+            <div className='flex'>
+              <div className='flex-shrink-0'>
+                <svg
+                  className='h-5 w-5 text-red-400'
+                  viewBox='0 0 20 20'
+                  fill='currentColor'
+                >
+                  <path
+                    fillRule='evenodd'
+                    d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              </div>
+              <div className='ml-3'>
+                <h3 className='text-sm font-medium text-red-800'>
+                  Error creating challenge
+                </h3>
+                <div className='mt-2 text-sm text-red-700'>{submitError}</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Message */}
+        {submitSuccess && (
+          <div className='bg-green-50 border border-green-200 rounded-lg p-4 mb-6'>
+            <div className='flex'>
+              <div className='flex-shrink-0'>
+                <svg
+                  className='h-5 w-5 text-green-400'
+                  viewBox='0 0 20 20'
+                  fill='currentColor'
+                >
+                  <path
+                    fillRule='evenodd'
+                    d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                    clipRule='evenodd'
+                  />
+                </svg>
+              </div>
+              <div className='ml-3'>
+                <h3 className='text-sm font-medium text-green-800'>
+                  Challenge created successfully!
+                </h3>
+                <div className='mt-2 text-sm text-green-700'>
+                  Redirecting to challenges page...
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className='bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:p-8'
+          className={`bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:p-8 ${
+            isSubmitting ? 'opacity-75 pointer-events-none' : ''
+          }`}
         >
           <div className='space-y-6'>
             {/* Title */}
@@ -277,13 +359,13 @@ export default function NewChallengePage() {
             </div>
 
             {/* Tag Preview */}
-            {tagArray.length > 0 && (
+            {formData.tags.length > 0 && (
               <div>
                 <label className='block text-sm font-medium text-gray-700 mb-2'>
                   Tag Preview
                 </label>
                 <div className='flex flex-wrap gap-2'>
-                  {tagArray.map((tag, index) => (
+                  {formData.tags.map((tag, index) => (
                     <span
                       key={index}
                       className='inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800 border border-gray-200'

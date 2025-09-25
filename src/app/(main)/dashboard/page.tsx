@@ -2,54 +2,13 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
+import { getCurrentUser, getRecentActivity } from '@/api'
 import Link from 'next/link'
 
-// Mock data for demonstration
-const mockUser = {
-  name: 'Aisha Johnson',
-  rank: 3,
-  skillCoins: 1247,
-  weeklyRank: 2,
-  badges: [
-    { title: 'Top Contributor', icon: '🏆', gradient: 'blue' as const },
-    { title: 'Problem Solver', icon: '💡', gradient: 'green' as const },
-    { title: 'Mentor', icon: '🎓', gradient: 'purple' as const },
-    { title: 'Team Player', icon: '🤝', gradient: 'orange' as const },
-  ],
-}
+export default async function Dashboard() {
+  const user = await getCurrentUser()
+  const activities = await getRecentActivity(5)
 
-const recentActivity = [
-  {
-    id: 1,
-    type: 'challenge',
-    title: 'How to optimize water filtration in rural communities?',
-    author: 'Dr. Sarah Mitchell',
-    upvotes: 23,
-    responses: 8,
-    tags: ['#Engineering', '#NGO'],
-    timeAgo: '2 hours ago',
-  },
-  {
-    id: 2,
-    type: 'answer',
-    title: 'Your answer to "Sustainable packaging solutions for e-commerce"',
-    upvotes: 15,
-    tags: ['#Business', '#Sustainability'],
-    timeAgo: '1 day ago',
-  },
-  {
-    id: 3,
-    type: 'challenge',
-    title: 'Machine learning approach to predict student dropout rates',
-    author: 'Prof. James Chen',
-    upvotes: 31,
-    responses: 12,
-    tags: ['#AI', '#Education'],
-    timeAgo: '3 days ago',
-  },
-]
-
-export default function Dashboard() {
   return (
     <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -59,7 +18,7 @@ export default function Dashboard() {
             {/* Welcome Header */}
             <div className='mb-8'>
               <h1 className='text-3xl font-bold text-text-dark mb-2'>
-                Welcome back, {mockUser.name}! 👋
+                Welcome back, {user.name}! 👋
               </h1>
               <p className='text-gray-600'>
                 Ready to tackle some challenges and earn more SkillCoins?
@@ -75,11 +34,7 @@ export default function Dashboard() {
                     <SkillCoin count={0} size='sm' />
                   </div>
                 </div>
-                <SkillCoin
-                  count={mockUser.skillCoins}
-                  size='lg'
-                  showAnimation
-                />
+                <SkillCoin count={user.skillCoins} size='lg' showAnimation />
               </div>
 
               <div className='bg-white p-6 rounded-xl shadow-sm border'>
@@ -87,12 +42,12 @@ export default function Dashboard() {
                   <h3 className='font-bold text-text-dark'>Weekly Rank</h3>
                   <div className='w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center'>
                     <span className='text-yellow-600 font-bold'>
-                      #{mockUser.weeklyRank}
+                      #{user.weeklyRank}
                     </span>
                   </div>
                 </div>
                 <div className='text-3xl font-extrabold text-text-dark'>
-                  #{mockUser.weeklyRank}
+                  #{user.weeklyRank}
                 </div>
                 <p className='text-sm text-gray-600 mt-2'>
                   ↗️ Up from #5 last week
@@ -107,7 +62,7 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className='text-3xl font-extrabold text-text-dark'>
-                  {mockUser.badges.length}
+                  {user.badges.length}
                 </div>
                 <p className='text-sm text-gray-600 mt-2'>+2 this month</p>
               </div>
@@ -130,7 +85,7 @@ export default function Dashboard() {
               </div>
 
               <div className='divide-y'>
-                {recentActivity.map((activity) => (
+                {activities.map((activity) => (
                   <div
                     key={activity.id}
                     className='p-6 hover:bg-gray-50 transition-colors'
@@ -184,14 +139,14 @@ export default function Dashboard() {
                         <div className='flex items-center gap-4 text-sm text-gray-500'>
                           <span>{activity.timeAgo}</span>
                           <div className='flex items-center gap-1'>
-                            <Upvote initialCount={activity.upvotes} />
+                            <Upvote initialCount={activity.upvotes || 0} />
                           </div>
                           {activity.responses && (
                             <span>{activity.responses} responses</span>
                           )}
                         </div>
                         <div className='flex gap-2 mt-2'>
-                          {activity.tags.map((tag, index) => (
+                          {activity.tags?.map((tag, index) => (
                             <span
                               key={index}
                               className='px-2 py-1 bg-gray-100 text-xs rounded-md text-gray-600'
@@ -215,11 +170,11 @@ export default function Dashboard() {
               <div className='text-center mb-6'>
                 <div className='w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center'>
                   <span className='text-2xl text-white font-bold'>
-                    {mockUser.name.charAt(0)}
+                    {user.name.charAt(0)}
                   </span>
                 </div>
                 <h3 className='font-bold text-text-dark text-lg'>
-                  {mockUser.name}
+                  {user.name}
                 </h3>
                 <p className='text-gray-600 text-sm'>
                   Computer Science Student
@@ -232,7 +187,7 @@ export default function Dashboard() {
                     Recent Badges
                   </h4>
                   <div className='grid grid-cols-2 gap-3'>
-                    {mockUser.badges.slice(0, 4).map((badge, index) => (
+                    {user.badges.slice(0, 4).map((badge, index) => (
                       <Badge key={index} {...badge} size='sm' />
                     ))}
                   </div>

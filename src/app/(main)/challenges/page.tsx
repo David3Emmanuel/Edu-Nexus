@@ -2,74 +2,8 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
+import { getChallenges } from '@/api'
 import Link from 'next/link'
-
-// Mock challenges data
-const challenges = [
-  {
-    id: 1,
-    title:
-      'How to optimize water filtration systems for rural communities in developing countries?',
-    description:
-      'NGO Challenge: We need innovative, cost-effective water filtration solutions that can be easily maintained by local communities without requiring advanced technical knowledge or expensive replacement parts.',
-    author: 'Dr. Sarah Mitchell',
-    authorType: 'Lecturer',
-    upvotes: 34,
-    responses: 12,
-    skillCoins: 50,
-    tags: ['#Engineering', '#NGO', '#WaterChallenge', '#Sustainability'],
-    timeAgo: '2 hours ago',
-    difficulty: 'Advanced',
-    category: 'Real-world Challenge',
-  },
-  {
-    id: 2,
-    title:
-      'What are the best practices for implementing microservices architecture in a startup environment?',
-    description:
-      'Looking for practical advice on breaking down a monolithic application into microservices. What are the key considerations for team size, deployment, and data management?',
-    author: 'Marcus Chen',
-    authorType: 'Student',
-    upvotes: 28,
-    responses: 8,
-    skillCoins: 30,
-    tags: ['#SoftwareEngineering', '#Microservices', '#Architecture'],
-    timeAgo: '5 hours ago',
-    difficulty: 'Intermediate',
-    category: 'Academic Q&A',
-  },
-  {
-    id: 3,
-    title:
-      'Design a sustainable packaging solution for e-commerce that reduces waste by 80%',
-    description:
-      'SME Challenge: Help our logistics company develop innovative packaging that maintains product protection while dramatically reducing environmental impact and shipping costs.',
-    author: 'Prof. Elena Rodriguez',
-    authorType: 'Lecturer',
-    upvotes: 67,
-    responses: 23,
-    skillCoins: 75,
-    tags: ['#BusinessChallenge', '#Sustainability', '#Innovation', '#Design'],
-    timeAgo: '1 day ago',
-    difficulty: 'Advanced',
-    category: 'Real-world Challenge',
-  },
-  {
-    id: 4,
-    title: 'How do you handle state management in large React applications?',
-    description:
-      'What are the pros and cons of different state management solutions like Redux, Zustand, or React Context? When should you choose each approach?',
-    author: 'Aisha Johnson',
-    authorType: 'Student',
-    upvotes: 15,
-    responses: 6,
-    skillCoins: 25,
-    tags: ['#React', '#JavaScript', '#StateManagement'],
-    timeAgo: '3 days ago',
-    difficulty: 'Intermediate',
-    category: 'Academic Q&A',
-  },
-]
 
 const filters = {
   categories: ['All', 'Real-world Challenge', 'Academic Q&A'],
@@ -84,7 +18,8 @@ const filters = {
   ],
 }
 
-export default function Challenges() {
+export default async function Challenges() {
+  const challenges = await getChallenges()
   return (
     <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -274,7 +209,7 @@ export default function Challenges() {
                         <span>•</span>
                         <span>{challenge.timeAgo}</span>
                         <span>•</span>
-                        <span>{challenge.responses} responses</span>
+                        <span>{challenge.responses.length} responses</span>
                       </div>
 
                       <div className='flex items-center gap-2'>

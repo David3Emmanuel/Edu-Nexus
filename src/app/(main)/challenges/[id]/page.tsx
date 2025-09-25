@@ -3,127 +3,45 @@ import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
 import Link from 'next/link'
+import { getChallengeDetail, type Challenge } from '@/api'
+import { notFound } from 'next/navigation'
 
-// Mock challenge data
-const challengeData = {
-  id: 1,
-  title:
-    'How to optimize water filtration systems for rural communities in developing countries?',
-  description: `We're working with several NGOs to provide clean water access to rural communities. The challenge is to design a water filtration system that meets these specific requirements:
-
-**Key Requirements:**
-- Cost-effective (under $100 per unit)
-- Requires minimal maintenance
-- Can be operated without electricity
-- Uses locally available materials where possible
-- Filters common contaminants (bacteria, sediment, chemicals)
-
-**Context:**
-These communities often lack technical expertise for complex maintenance, reliable electricity, and access to replacement parts. Previous solutions have failed due to complexity and maintenance requirements.
-
-**Deliverables:**
-1. Technical design specification
-2. Bill of materials with cost breakdown
-3. Maintenance schedule and procedures
-4. Pilot implementation plan
-
-This is a real-world challenge in partnership with WaterAid International. The best solutions will be considered for actual implementation.`,
-  author: 'Dr. Sarah Mitchell',
-  authorType: 'Lecturer',
-  authorBio:
-    'Environmental Engineering Professor at MIT, specializing in sustainable water systems',
-  upvotes: 34,
-  skillCoins: 50,
-  tags: ['#Engineering', '#NGO', '#WaterChallenge', '#Sustainability'],
-  timeAgo: '2 hours ago',
-  difficulty: 'Advanced',
-  category: 'Real-world Challenge',
-  responses: [
-    {
-      id: 1,
-      author: 'Marcus Chen',
-      authorType: 'Student',
-      university: 'Stanford',
-      upvotes: 23,
-      timeAgo: '1 hour ago',
-      content: `I propose a **bio-sand filtration system** combined with ceramic pre-filters. Here's my approach:
-
-**Design Overview:**
-The system uses a three-stage filtration process:
-1. **Ceramic Pre-filter**: Removes larger particles and some bacteria
-2. **Bio-sand Filter**: Biological layer removes pathogens
-3. **Activated Carbon**: Removes chemicals and improves taste
-
-**Cost Breakdown:**
-- Ceramic filter: $15
-- Sand and gravel: $10
-- Container (plastic drum): $25
-- Activated carbon: $20
-- Assembly materials: $15
-- **Total: $85**
-
-**Maintenance:**
-- Clean ceramic filter weekly (simple scrubbing)
-- Replace carbon every 6 months
-- No electricity required
-
-This design has been tested in Kenya with 95% bacterial removal rate. I can provide detailed technical drawings if there's interest.`,
-      isTopAnswer: true,
-    },
-    {
-      id: 2,
-      author: 'Elena Rodriguez',
-      authorType: 'Student',
-      university: 'UC Berkeley',
-      upvotes: 18,
-      timeAgo: '45 minutes ago',
-      content: `Great challenge! I'd like to build on Marcus's bio-sand idea but suggest a **modular approach** for easier maintenance and transport:
-
-**Key Innovation: Stackable Modules**
-- Each module handles one filtration stage
-- Modules can be separated for cleaning
-- Easier to transport and store spare parts
-
-**Additional Considerations:**
-- Use local clay for ceramic components (reduces cost)
-- Solar disinfection chamber as optional add-on
-- Community training program included
-
-**Pilot Plan:**
-1. Partner with local potters for ceramic production
-2. Train 5 community members as maintenance leads
-3. Install 10 units, monitor for 6 months
-4. Document and iterate based on feedback
-
-Would love to collaborate on detailed specifications!`,
-    },
-    {
-      id: 3,
-      author: 'Dr. James Thompson',
-      authorType: 'Lecturer',
-      university: 'Imperial College London',
-      upvotes: 15,
-      timeAgo: '30 minutes ago',
-      content: `Excellent responses from both Marcus and Elena. As someone who's implemented similar systems in Bangladesh, I'd add some practical considerations:
-
-**Critical Success Factors:**
-1. **Community Buy-in**: Include community in design process
-2. **Local Material Sourcing**: Partner with local suppliers
-3. **Training Materials**: Visual guides in local languages
-4. **Backup Plan**: What happens when systems fail?
-
-**Technical Suggestions:**
-- Include flow rate indicators (simple visual)
-- Design for easy disassembly without tools
-- Consider seasonal variations in water quality
-- Plan for scale manufacturing
-
-Both solutions show promise. I'd be happy to connect you with our NGO partners for field testing opportunities.`,
-    },
-  ],
+interface ChallengeDetailPageProps {
+  params: {
+    id: string
+  }
 }
 
-export default function ChallengeDetail() {
+async function getChallengeData(id: number): Promise<Challenge> {
+  try {
+    const challenge = await getChallengeDetail(id)
+    return challenge
+  } catch (error) {
+    console.error('Error fetching challenge:', error)
+    notFound()
+  }
+}
+export default async function ChallengeDetail({
+  params,
+}: ChallengeDetailPageProps) {
+  const challengeId = parseInt(params.id, 10)
+
+  if (isNaN(challengeId)) {
+    notFound()
+  }
+
+  const challengeData = await getChallengeData(challengeId)
+
+  // Calculate which response is the top answer
+  const acceptedResponses = challengeData.responses.filter(
+    (response) => response.isAccepted,
+  )
+  const topAnswerId =
+    acceptedResponses.length > 0
+      ? acceptedResponses.reduce((max, current) =>
+          current.upvotes > max.upvotes ? current : max,
+        ).id
+      : null
   return (
     <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -287,89 +205,120 @@ export default function ChallengeDetail() {
               </div>
 
               <div className='space-y-8'>
-                {challengeData.responses.map((response, index) => (
-                  <div key={response.id} className='relative'>
-                    {response.isTopAnswer && (
-                      <div className='absolute -top-2 -left-2 bg-secondary text-white px-3 py-1 rounded-full text-xs font-medium'>
-                        ⭐ Top Answer
-                      </div>
-                    )}
-
-                    <div
-                      className={`p-6 rounded-xl border-2 transition-all ${
-                        response.isTopAnswer
-                          ? 'border-secondary bg-green-50'
-                          : 'border-gray-200 bg-gray-50'
-                      }`}
-                    >
-                      <div className='flex items-start gap-4'>
-                        <div className='flex-shrink-0'>
-                          <Upvote initialCount={response.upvotes} />
+                {challengeData.responses.map((response, index) => {
+                  const isTopAnswer = response.id === topAnswerId
+                  return (
+                    <div key={response.id} className='relative'>
+                      {isTopAnswer && (
+                        <div className='absolute -top-3 -left-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg z-10'>
+                          ⭐ Top Answer
                         </div>
+                      )}
 
-                        <div className='flex-1'>
-                          <div className='flex items-center gap-3 mb-4'>
-                            <div className='w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center'>
-                              <span className='text-white font-medium text-sm'>
-                                {response.author.charAt(0)}
-                              </span>
-                            </div>
-                            <div>
-                              <h3 className='font-medium text-text-dark'>
-                                {response.author}
-                              </h3>
-                              <p className='text-sm text-gray-600'>
-                                {response.authorType} • {response.university} •{' '}
-                                {response.timeAgo}
-                              </p>
-                            </div>
+                      {response.isAccepted && !isTopAnswer && (
+                        <div className='absolute -top-2 -left-2 bg-secondary text-white px-3 py-1 rounded-full text-xs font-medium z-10'>
+                          ✅ Accepted Answer
+                        </div>
+                      )}
+
+                      <div
+                        className={`p-6 rounded-xl border-2 transition-all ${
+                          isTopAnswer
+                            ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-orange-50 shadow-lg'
+                            : response.isAccepted
+                            ? 'border-green-300 bg-gradient-to-br from-green-50 to-emerald-50 shadow-md'
+                            : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                        }`}
+                      >
+                        <div className='flex items-start gap-4'>
+                          <div className='flex-shrink-0'>
+                            <Upvote initialCount={response.upvotes} />
                           </div>
 
-                          <div className='prose max-w-none'>
-                            <div className='whitespace-pre-wrap text-gray-700 leading-relaxed'>
-                              {response.content}
+                          <div className='flex-1'>
+                            <div className='flex items-center gap-3 mb-4'>
+                              <div
+                                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                                  isTopAnswer
+                                    ? 'bg-gradient-to-br from-yellow-400 to-orange-500 ring-2 ring-yellow-300'
+                                    : response.isAccepted
+                                    ? 'bg-gradient-to-br from-green-500 to-emerald-600 ring-2 ring-green-300'
+                                    : 'bg-gradient-to-br from-primary to-blue-600'
+                                }`}
+                              >
+                                <span className='text-white font-medium text-sm'>
+                                  {response.author.charAt(0)}
+                                </span>
+                              </div>
+                              <div>
+                                <div className='flex items-center gap-2'>
+                                  <h3 className='font-medium text-text-dark'>
+                                    {response.author}
+                                  </h3>
+                                  {isTopAnswer && (
+                                    <span className='text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium'>
+                                      Top Contributor
+                                    </span>
+                                  )}
+                                  {response.isAccepted && !isTopAnswer && (
+                                    <span className='text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium'>
+                                      Verified
+                                    </span>
+                                  )}
+                                </div>
+                                <p className='text-sm text-gray-600'>
+                                  {response.authorType} • {response.university}{' '}
+                                  • {response.timeAgo}
+                                </p>
+                              </div>
                             </div>
-                          </div>
 
-                          <div className='flex items-center gap-4 mt-4 pt-4 border-t'>
-                            <Button variant='outline' size='sm'>
-                              <svg
-                                className='w-3 h-3 mr-1'
-                                fill='none'
-                                stroke='currentColor'
-                                viewBox='0 0 24 24'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth={2}
-                                  d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
-                                />
-                              </svg>
-                              Reply
-                            </Button>
-                            <Button variant='outline' size='sm'>
-                              <svg
-                                className='w-3 h-3 mr-1'
-                                fill='none'
-                                stroke='currentColor'
-                                viewBox='0 0 24 24'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth={2}
-                                  d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z'
-                                />
-                              </svg>
-                              Share
-                            </Button>
+                            <div className='prose max-w-none'>
+                              <div className='whitespace-pre-wrap text-gray-700 leading-relaxed'>
+                                {response.content}
+                              </div>
+                            </div>
+
+                            <div className='flex items-center gap-4 mt-4 pt-4 border-t'>
+                              <Button variant='outline' size='sm'>
+                                <svg
+                                  className='w-3 h-3 mr-1'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  viewBox='0 0 24 24'
+                                >
+                                  <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth={2}
+                                    d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
+                                  />
+                                </svg>
+                                Reply
+                              </Button>
+                              <Button variant='outline' size='sm'>
+                                <svg
+                                  className='w-3 h-3 mr-1'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  viewBox='0 0 24 24'
+                                >
+                                  <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth={2}
+                                    d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z'
+                                  />
+                                </svg>
+                                Share
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               {/* Post Answer Form */}
