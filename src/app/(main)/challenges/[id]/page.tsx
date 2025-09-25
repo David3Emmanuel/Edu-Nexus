@@ -6,9 +6,9 @@ import { getChallengeDetail, type Challenge } from '@/api'
 import { notFound } from 'next/navigation'
 
 interface ChallengeDetailPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 async function getChallengeData(id: number): Promise<Challenge> {
@@ -20,11 +20,11 @@ async function getChallengeData(id: number): Promise<Challenge> {
     notFound()
   }
 }
-export default async function ChallengeDetail(
-  props: Promise<ChallengeDetailPageProps>,
-) {
-  const { params } = await props
-  const challengeId = parseInt(params.id, 10)
+export default async function ChallengeDetail({
+  params,
+}: ChallengeDetailPageProps) {
+  const { id } = await params
+  const challengeId = parseInt(id, 10)
 
   if (isNaN(challengeId)) {
     notFound()
