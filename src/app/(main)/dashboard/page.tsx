@@ -51,41 +51,7 @@ const recentActivity = [
 
 export default function Dashboard() {
   return (
-    <div className='min-h-screen bg-bg-light'>
-      {/* Navigation */}
-      <nav className='bg-white border-b shadow-sm'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-16'>
-            <Link href='/' className='text-xl font-extrabold text-primary'>
-              EduNexus
-            </Link>
-            <div className='flex items-center space-x-6'>
-              <Link href='/dashboard' className='text-primary font-medium'>
-                Dashboard
-              </Link>
-              <Link
-                href='/challenges'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Challenges
-              </Link>
-              <Link
-                href='/leaderboard'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Leaderboard
-              </Link>
-              <Link
-                href='/profile'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Profile
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
           {/* Main Content */}
@@ -347,6 +313,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

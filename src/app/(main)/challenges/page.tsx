@@ -86,41 +86,7 @@ const filters = {
 
 export default function Challenges() {
   return (
-    <div className='min-h-screen bg-bg-light'>
-      {/* Navigation */}
-      <nav className='bg-white border-b shadow-sm'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-16'>
-            <Link href='/' className='text-xl font-extrabold text-primary'>
-              EduNexus
-            </Link>
-            <div className='flex items-center space-x-6'>
-              <Link
-                href='/dashboard'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Dashboard
-              </Link>
-              <Link href='/challenges' className='text-primary font-medium'>
-                Challenges
-              </Link>
-              <Link
-                href='/leaderboard'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Leaderboard
-              </Link>
-              <Link
-                href='/profile'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Profile
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Header */}
         <div className='mb-8'>
@@ -368,6 +334,6 @@ export default function Challenges() {
           </button>
         </Link>
       </div>
-    </div>
+    </>
   )
 }

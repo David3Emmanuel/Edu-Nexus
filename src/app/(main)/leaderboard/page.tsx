@@ -148,41 +148,7 @@ const allUsers = [...topContributors, ...generateMoreUsers()]
 
 export default function Leaderboard() {
   return (
-    <div className='min-h-screen bg-bg-light'>
-      {/* Navigation */}
-      <nav className='bg-white border-b shadow-sm'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-16'>
-            <Link href='/' className='text-xl font-extrabold text-primary'>
-              EduNexus
-            </Link>
-            <div className='flex items-center space-x-6'>
-              <Link
-                href='/dashboard'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Dashboard
-              </Link>
-              <Link
-                href='/challenges'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Challenges
-              </Link>
-              <Link href='/leaderboard' className='text-primary font-medium'>
-                Leaderboard
-              </Link>
-              <Link
-                href='/profile'
-                className='text-text-dark hover:text-primary transition-colors'
-              >
-                Profile
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
+    <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
         {/* Header */}
         <div className='text-center mb-12'>
@@ -460,6 +426,6 @@ export default function Leaderboard() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
