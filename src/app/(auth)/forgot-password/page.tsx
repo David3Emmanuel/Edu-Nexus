@@ -99,7 +99,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='w-full space-y-8'>
+      <div className='max-w-break-md w-full space-y-8'>
         <div className='text-center'>
           <h1 className='text-4xl font-extrabold text-gray-900 mb-2'>
             Forgot Password?
