@@ -21,7 +21,7 @@ export default function Home() {
                 Features
               </Link>
               <Link
-                href='#leaderboard'
+                href='/leaderboard'
                 className='text-text-dark hover:text-primary transition-colors'
               >
                 Leaderboard
@@ -34,10 +34,14 @@ export default function Home() {
               </Link>
             </nav>
             <div className='flex items-center space-x-4'>
-              <Button variant='outline' size='sm'>
-                Login
-              </Button>
-              <Button size='sm'>Get Started</Button>
+              <Link href='/dashboard'>
+                <Button variant='outline' size='sm'>
+                  Login
+                </Button>
+              </Link>
+              <Link href='/dashboard'>
+                <Button size='sm'>Get Started</Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -57,12 +61,16 @@ export default function Home() {
                 and build their Proof-of-Skill Passport.
               </p>
               <div className='flex flex-col sm:flex-row gap-4'>
-                <Button size='lg' className='text-lg px-8'>
-                  Sign Up Now
-                </Button>
-                <Button variant='outline' size='lg' className='text-lg px-8'>
-                  Explore Challenges
-                </Button>
+                <Link href='/dashboard'>
+                  <Button size='lg' className='text-lg px-8'>
+                    Sign Up Now
+                  </Button>
+                </Link>
+                <Link href='/challenges'>
+                  <Button variant='outline' size='lg' className='text-lg px-8'>
+                    Explore Challenges
+                  </Button>
+                </Link>
               </div>
             </div>
             <div className='flex justify-center'>
@@ -202,6 +210,13 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            <div className='text-center mt-8'>
+              <Link href='/leaderboard'>
+                <Button variant='outline' size='md'>
+                  View Full Leaderboard
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -216,9 +231,11 @@ export default function Home() {
             Join thousands of students and educators who are already building
             their skills and advancing their careers.
           </p>
-          <Button size='lg' variant='secondary' className='text-lg px-8'>
-            Create Your Account
-          </Button>
+          <Link href='/dashboard'>
+            <Button size='lg' variant='secondary' className='text-lg px-8'>
+              Create Your Account
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -238,7 +255,7 @@ export default function Home() {
               <ul className='space-y-2'>
                 <li>
                   <Link
-                    href='#'
+                    href='/challenges'
                     className='text-gray-400 hover:text-white transition-colors'
                   >
                     Challenges
@@ -246,7 +263,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href='/leaderboard'
                     className='text-gray-400 hover:text-white transition-colors'
                   >
                     Leaderboard
@@ -254,7 +271,7 @@ export default function Home() {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href='/profile'
                     className='text-gray-400 hover:text-white transition-colors'
                   >
                     Skill Passport
