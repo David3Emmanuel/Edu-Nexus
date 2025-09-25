@@ -79,11 +79,10 @@ export const currentUser: User = {
 }
 
 // Leaderboard data
-export const topContributors: User[] = [
+const manuallyAddedUsers: User[] = [
   {
-    id: 1,
+    id: 1001,
     name: 'Aisha Johnson',
-    avatar: 'AJ',
     type: 'Student',
     university: 'MIT',
     rank: 1,
@@ -99,9 +98,8 @@ export const topContributors: User[] = [
     specialties: ['Machine Learning', 'Data Science'],
   },
   {
-    id: 2,
+    id: 1002,
     name: 'Dr. Marcus Chen',
-    avatar: 'MC',
     type: 'Lecturer',
     university: 'Stanford',
     rank: 2,
@@ -115,83 +113,18 @@ export const topContributors: User[] = [
     weeklyGain: 198,
     specialties: ['Software Engineering', 'AI'],
   },
-  {
-    id: 3,
-    name: 'Sofia Rodriguez',
-    avatar: 'SR',
-    type: 'Student',
-    university: 'UC Berkeley',
-    rank: 3,
-    skillCoins: 1923,
-    weeklyRank: 3,
-    totalContributions: 31,
-    badges: [
-      { title: 'Rising Star', icon: '🌟', gradient: 'purple' },
-      { title: 'Collaborator', icon: '🤝', gradient: 'blue' },
-    ],
-    weeklyGain: 167,
-    specialties: ['Bioengineering', 'Sustainability'],
-  },
 ]
 
-const generateMoreUsers = () => {
-  const names = [
-    'Alex Kim',
-    'Sarah Miller',
-    'David Park',
-    'Emma Wilson',
-    'Ryan Lee',
-    'Maya Patel',
-    'Chris Brown',
-    'Lisa Zhang',
-  ]
-  const universities = [
-    'Yale',
-    'Princeton',
-    'Columbia',
-    'UPenn',
-    'Cornell',
-    'NYU',
-    'UCLA',
-    'USC',
-  ]
-  const specialties = [
-    ['Chemistry', 'Biology'],
-    ['Psychology', 'Neuroscience'],
-    ['Economics', 'Finance'],
-    ['Environmental Science', 'Climate'],
-    ['Art', 'Design'],
-    ['Philosophy', 'Ethics'],
-    ['Marketing', 'Communications'],
-    ['Medicine', 'Health'],
-  ]
-
-  return names.map(
-    (name, index) =>
-      ({
-        id: index + 6,
-        rank: index + 6,
-        name,
-        avatar: name
-          .split(' ')
-          .map((n) => n[0])
-          .join(''),
-        type: Math.random() > 0.5 ? 'Student' : 'Lecturer',
-        university: universities[index],
-        skillCoins: 1500 - index * 120 - Math.floor(Math.random() * 100),
-        badges: [
-          { title: 'Rising Star', icon: '🌟', gradient: 'purple' },
-          { title: 'Collaborator', icon: '🤝', gradient: 'blue' },
-        ],
-        // contributions: Math.floor(Math.random() * 30) + 15,
-        weeklyGain: Math.floor(Math.random() * 100) + 30,
-        weeklyRank: index + 6,
-        specialties: specialties[index],
-      } satisfies User),
+const fetchMoreUsers = async () => {
+  const response = await fetch(
+    'https://68d58d52e29051d1c0aefbcd.mockapi.io/users_',
   )
+  const data = await response.json()
+  return data as User[]
 }
 
-export const allUsers = [...topContributors, ...generateMoreUsers()]
+export const allUsers = [...manuallyAddedUsers, ...(await fetchMoreUsers())]
+export const topContributors = allUsers.slice(0, 3)
 
 // API functions for users
 export const getUserProfile = async (userId: number): Promise<User> => {

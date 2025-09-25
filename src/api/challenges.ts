@@ -4,15 +4,15 @@ export interface Challenge {
   title: string
   description: string
   author: string
-  authorType: 'Student' | 'Lecturer' | 'Industry Professional'
+  authorType?: 'Student' | 'Lecturer' | 'Industry Professional'
   authorBio?: string
   upvotes: number
   responses: Response[]
   skillCoins: number
   tags: string[]
-  timeAgo: string
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced'
-  category: 'Real-world Challenge' | 'Academic Q&A' | 'Industry Problem'
+  timeAgo?: string
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced'
+  category?: 'Real-world Challenge' | 'Academic Q&A' | 'Industry Problem'
 }
 
 export interface Response {

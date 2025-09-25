@@ -4,6 +4,53 @@ import { SkillCoin } from '@/components/ui/SkillCoin'
 import Link from 'next/link'
 import { User, topContributors, allUsers } from '@/api'
 
+// Helper function to get initials from name
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 2)
+}
+
+// Avatar component that shows image or falls back to initials
+function Avatar({
+  user,
+  size = 'md',
+  className = '',
+}: {
+  user: User
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  className?: string
+}) {
+  const sizeClasses = {
+    sm: 'w-8 h-8 text-xs',
+    md: 'w-10 h-10 text-sm',
+    lg: 'w-16 h-16 text-lg',
+    xl: 'w-20 h-20 text-xl',
+  }
+
+  const baseClasses = `${sizeClasses[size]} rounded-full flex items-center justify-center font-medium ${className}`
+
+  if (user.avatar) {
+    return (
+      <img
+        src={user.avatar}
+        alt={user.name}
+        className={`${baseClasses} object-cover`}
+      />
+    )
+  }
+
+  return (
+    <div
+      className={`${baseClasses} bg-gradient-to-br from-primary to-blue-600 text-white`}
+    >
+      {getInitials(user.name)}
+    </div>
+  )
+}
+
 export default function Leaderboard() {
   return (
     <>
@@ -25,10 +72,12 @@ export default function Leaderboard() {
             {/* Second Place */}
             <div className='md:order-1 flex flex-col items-center'>
               <div className='bg-white rounded-2xl shadow-lg border p-6 text-center transform md:-translate-y-4'>
-                <div className='w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center'>
-                  <span className='text-white font-bold text-lg'>
-                    {topContributors[1].avatar}
-                  </span>
+                <div className='mx-auto flex justify-center'>
+                  <Avatar
+                    user={topContributors[1]}
+                    size='lg'
+                    className='bg-gradient-to-br from-gray-400 to-gray-600'
+                  />
                 </div>
                 <div className='w-8 h-8 bg-gray-400 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold'>
                   2
@@ -54,10 +103,12 @@ export default function Leaderboard() {
                 <div className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold'>
                   👑 Champion
                 </div>
-                <div className='w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full mx-auto mb-4 flex items-center justify-center'>
-                  <span className='text-white font-bold text-xl'>
-                    {topContributors[0].avatar}
-                  </span>
+                <div className='mx-auto flex justify-center'>
+                  <Avatar
+                    user={topContributors[0]}
+                    size='xl'
+                    className='bg-gradient-to-br from-yellow-400 to-yellow-600'
+                  />
                 </div>
                 <div className='w-10 h-10 bg-yellow-500 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold text-lg'>
                   1
@@ -84,10 +135,12 @@ export default function Leaderboard() {
             {/* Third Place */}
             <div className='md:order-3 flex flex-col items-center'>
               <div className='bg-white rounded-2xl shadow-lg border p-6 text-center transform md:-translate-y-4'>
-                <div className='w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full mx-auto mb-4 flex items-center justify-center'>
-                  <span className='text-white font-bold text-lg'>
-                    {topContributors[2].avatar}
-                  </span>
+                <div className='mx-auto flex justify-center'>
+                  <Avatar
+                    user={topContributors[2]}
+                    size='lg'
+                    className='bg-gradient-to-br from-orange-400 to-orange-600'
+                  />
                 </div>
                 <div className='w-8 h-8 bg-orange-500 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold'>
                   3
@@ -193,10 +246,8 @@ export default function Leaderboard() {
 
                     <td className='px-6 py-4 whitespace-nowrap'>
                       <div className='flex items-center'>
-                        <div className='w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center mr-3'>
-                          <span className='text-white font-medium text-sm'>
-                            {user.avatar}
-                          </span>
+                        <div className='mr-3'>
+                          <Avatar user={user} size='md' />
                         </div>
                         <div>
                           <div className='text-sm font-medium text-text-dark'>
