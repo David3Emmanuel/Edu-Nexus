@@ -34,7 +34,7 @@ export function Button({
   } else if (variant === 'secondary') {
     variantClasses = `bg-secondary text-white hover:bg-green-700`
   } else if (variant === 'outline') {
-    variantClasses = `border-2 border-primary text-primary bg-white hover:bg-primary hover:text-white`
+    variantClasses = `border-2 border-primary text-primary hover:bg-primary hover:text-white`
   }
 
   const disabledClasses = disabled

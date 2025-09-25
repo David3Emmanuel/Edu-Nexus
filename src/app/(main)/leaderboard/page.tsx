@@ -155,7 +155,7 @@ export default function Leaderboard() {
           <h1 className='text-4xl font-bold text-text-dark mb-4'>
             🏆 Leaderboard
           </h1>
-          <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
+          <p className='text-xl text-gray-600 max-w-break-md mx-auto'>
             Celebrating our top contributors who are making a real impact
             through knowledge sharing and problem solving.
           </p>
@@ -403,7 +403,7 @@ export default function Leaderboard() {
             <h3 className='text-2xl font-bold mb-4'>
               Want to climb the leaderboard?
             </h3>
-            <p className='text-blue-100 mb-6 max-w-2xl mx-auto'>
+            <p className='text-blue-100 mb-6 max-w-break-md mx-auto'>
               Start contributing to challenges, help fellow students, and build
               your Proof-of-Skill Passport to earn more SkillCoins!
             </p>
@@ -417,7 +417,7 @@ export default function Leaderboard() {
                 <Button
                   size='lg'
                   variant='outline'
-                  className='text-lg px-8 border-white text-white hover:bg-white hover:text-primary'
+                  className='text-lg px-8 border-white text-white'
                 >
                   Post a Challenge
                 </Button>
