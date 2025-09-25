@@ -90,3 +90,37 @@ body {
 .skillcoin-animate {
   animation: skillcoin-bounce 200ms ease-out;
 }
+
+/* Form validation styles */
+.form-input:focus {
+  outline: none;
+  ring: 2px solid var(--color-primary);
+  border-color: transparent;
+}
+
+.form-input.error {
+  border-color: var(--color-danger);
+  ring: 2px solid var(--color-danger);
+}
+
+/* Authentication page gradients */
+.auth-gradient {
+  background: linear-gradient(
+    135deg,
+    rgb(239 246 255) 0%,
+    rgb(240 253 244) 100%
+  );
+}
+
+/* Radio button custom styling */
+.radio-card:has(input:checked) {
+  border-color: var(--color-primary);
+  background-color: rgb(239 246 255);
+}
+
+/* Social login buttons hover effects */
+.social-btn:hover {
+  background-color: rgb(249 250 251);
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}

@@ -34,12 +34,12 @@ export default function Home() {
               </Link>
             </nav>
             <div className='flex items-center space-x-4'>
-              <Link href='/dashboard'>
+              <Link href='/login'>
                 <Button variant='outline' size='sm'>
                   Login
                 </Button>
               </Link>
-              <Link href='/dashboard'>
+              <Link href='/signup'>
                 <Button size='sm'>Get Started</Button>
               </Link>
             </div>
