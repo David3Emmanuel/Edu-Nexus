@@ -9,11 +9,7 @@
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": false
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "type": {
       "type": "enumeration",
@@ -24,6 +20,30 @@
         "badge",
         "upvote"
       ]
+    },
+    "badge": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::badge.badge",
+      "inversedBy": "activity"
+    },
+    "challenge": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::challenge.challenge",
+      "inversedBy": "activities"
+    },
+    "response": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::response.response",
+      "inversedBy": "activities"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::user.user",
+      "inversedBy": "activities"
     }
   }
 }

@@ -477,12 +477,12 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
-  };
   attributes: {
+    badge: Schema.Attribute.Relation<'oneToOne', 'api::badge.badge'>;
+    challenge: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::challenge.challenge'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -493,6 +493,7 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    response: Schema.Attribute.Relation<'manyToOne', 'api::response.response'>;
     type: Schema.Attribute.Enumeration<
       ['challenge', 'answer', 'badge', 'upvote']
     > &
@@ -500,6 +501,7 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<'manyToOne', 'api::user.user'>;
   };
 }
 
@@ -513,12 +515,8 @@ export interface ApiBadgeBadge extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
-  };
   attributes: {
+    activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -551,12 +549,11 @@ export interface ApiChallengeChallenge extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
-  };
   attributes: {
+    activities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    >;
     category: Schema.Attribute.Enumeration<
       ['Real-world Challenge', 'Academic Q&A', 'Industry Problem']
     >;
@@ -595,12 +592,11 @@ export interface ApiResponseResponse extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
-  };
   attributes: {
+    activities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    >;
     challenge: Schema.Attribute.Relation<
       'manyToOne',
       'api::challenge.challenge'
@@ -706,12 +702,11 @@ export interface ApiUserUser extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
-  };
   attributes: {
+    activities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    >;
     avatar: Schema.Attribute.Media<'images'>;
     badges: Schema.Attribute.Relation<'manyToMany', 'api::badge.badge'>;
     bio: Schema.Attribute.Text;

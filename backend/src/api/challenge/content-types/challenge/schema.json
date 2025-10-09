@@ -9,11 +9,7 @@
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": false
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "title": {
       "type": "string",
@@ -56,6 +52,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::response.response",
+      "mappedBy": "challenge"
+    },
+    "activities": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::activity.activity",
       "mappedBy": "challenge"
     }
   }
