@@ -200,9 +200,9 @@ export default async function Home() {
           <div className='bg-white rounded-xl shadow-lg p-8 mx-auto'>
             <div className='space-y-4'>
               {[
-                { name: 'Aisha Johnson', coins: 2847, rank: 1, badges: 12 },
-                { name: 'Marcus Chen', coins: 2156, rank: 2, badges: 9 },
-                { name: 'Sofia Rodriguez', coins: 1923, rank: 3, badges: 8 },
+                { username: 'Aisha Johnson', coins: 2847, rank: 1, badges: 12 },
+                { username: 'Marcus Chen', coins: 2156, rank: 2, badges: 9 },
+                { username: 'Sofia Rodriguez', coins: 1923, rank: 3, badges: 8 },
               ].map((user, index) => (
                 <div
                   key={index}
