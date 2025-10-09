@@ -14,7 +14,7 @@ export interface User {
   id: number
   username: string
   email?: string
-  avatar?: { url: string; [key: string]: any }
+  avatar?: { url: string }
   type: 'Student' | 'Lecturer' | 'Industry Professional'
   university?: string
   program?: string

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function formatStrapiData(apiResponse: any): any {
   if (apiResponse === null || apiResponse === undefined) {
     return apiResponse

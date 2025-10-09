@@ -4,9 +4,11 @@ import { cookies } from 'next/headers'
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
 
-const toQueryString = (params: Record<string, any>): string => {
+type QueryParamValue = string | number | boolean | null | undefined | QueryParamValue[] | { [key: string]: QueryParamValue };
+
+const toQueryString = (params: Record<string, QueryParamValue>): string => {
   const parts: string[] = [];
-  const buildParams = (data: any, prefix: string = '') => {
+  const buildParams = (data: QueryParamValue, prefix: string = '') => {
     if (data === null || data === undefined) return;
 
     if (Array.isArray(data)) {
@@ -50,7 +52,7 @@ async function authenticatedFetch(path: string, options: RequestInit = {}) {
     return res.json();
 }
 
-export async function getFromApi(path: string, params?: Record<string, any>) {
+export async function getFromApi(path: string, params?: Record<string, QueryParamValue>) {
     let fullPath = path;
     if (params) {
         fullPath += `?${toQueryString(params)}`;
@@ -58,7 +60,7 @@ export async function getFromApi(path: string, params?: Record<string, any>) {
     return authenticatedFetch(fullPath);
 }
 
-export async function postToApi(path: string, data: any) {
+export async function postToApi(path: string, data: object) {
     const isAuthRequest = path.startsWith('/auth/');
     const body = isAuthRequest ? JSON.stringify(data) : JSON.stringify({ data });
 
