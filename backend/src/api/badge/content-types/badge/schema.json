@@ -31,17 +31,17 @@
         "orange"
       ]
     },
-    "users": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::user.user",
-      "inversedBy": "badges"
-    },
     "activity": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::activity.activity",
       "mappedBy": "badge"
+    },
+    "users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "badges"
     }
   }
 }

@@ -9,11 +9,7 @@
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {
-    "i18n": {
-      "localized": false
-    }
-  },
+  "pluginOptions": {},
   "attributes": {
     "name": {
       "type": "string",
@@ -23,8 +19,8 @@
     "users": {
       "type": "relation",
       "relation": "manyToMany",
-      "target": "api::user.user",
-      "inversedBy": "specialties"
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "specialties"
     }
   }
 }

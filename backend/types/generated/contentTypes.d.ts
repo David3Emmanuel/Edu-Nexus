@@ -501,7 +501,10 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'manyToOne', 'api::user.user'>;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -535,7 +538,10 @@ export interface ApiBadgeBadge extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users: Schema.Attribute.Relation<'manyToMany', 'api::user.user'>;
+    users: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -630,11 +636,6 @@ export interface ApiSpecialtySpecialty extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: false;
   };
-  pluginOptions: {
-    i18n: {
-      localized: false;
-    };
-  };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -652,7 +653,10 @@ export interface ApiSpecialtySpecialty extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    users: Schema.Attribute.Relation<'manyToMany', 'api::user.user'>;
+    users: Schema.Attribute.Relation<
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -689,55 +693,6 @@ export interface ApiTagTag extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-  };
-}
-
-export interface ApiUserUser extends Struct.CollectionTypeSchema {
-  collectionName: 'users';
-  info: {
-    displayName: 'User';
-    pluralName: 'users';
-    singularName: 'user';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    activities: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::activity.activity'
-    >;
-    avatar: Schema.Attribute.Media<'images'>;
-    badges: Schema.Attribute.Relation<'manyToMany', 'api::badge.badge'>;
-    bio: Schema.Attribute.Text;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    graduationYear: Schema.Attribute.Integer;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::user.user'> &
-      Schema.Attribute.Private;
-    location: Schema.Attribute.String;
-    name: Schema.Attribute.String;
-    profileViews: Schema.Attribute.Integer;
-    program: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    rank: Schema.Attribute.Integer;
-    skillCoins: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    specialties: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::specialty.specialty'
-    >;
-    totalContributions: Schema.Attribute.Integer;
-    type: Schema.Attribute.Enumeration<
-      ['Student', 'Lecturer', 'Industry Professional']
-    >;
-    university: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    weeklyGain: Schema.Attribute.Integer;
-    weeklyRank: Schema.Attribute.Integer;
   };
 }
 
@@ -1196,9 +1151,15 @@ export interface PluginUsersPermissionsUser
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
+    activities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    >;
+    avatar: Schema.Attribute.Media<'images'>;
+    badges: Schema.Attribute.Relation<'manyToMany', 'api::badge.badge'>;
+    bio: Schema.Attribute.Text;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
@@ -1210,17 +1171,20 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    graduationYear: Schema.Attribute.Integer;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    location: Schema.Attribute.String;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    program: Schema.Attribute.String;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1228,6 +1192,15 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    skillCoins: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    specialties: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::specialty.specialty'
+    >;
+    type: Schema.Attribute.Enumeration<
+      ['Student', 'Lecturer', 'Industry Professional']
+    >;
+    university: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1258,7 +1231,6 @@ declare module '@strapi/strapi' {
       'api::response.response': ApiResponseResponse;
       'api::specialty.specialty': ApiSpecialtySpecialty;
       'api::tag.tag': ApiTagTag;
-      'api::user.user': ApiUserUser;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
