@@ -71,7 +71,10 @@ export default async function Profile() {
                   {/* Quick Stats */}
                   <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
                     <div className='text-center'>
-                      <SkillCoin count={userProfile.skillCoins} size='sm' />
+                      <SkillCoin
+                        count={userProfile.skillCoins ?? 0}
+                        size='sm'
+                      />
                       <p className='text-xs text-gray-500 mt-1'>
                         Total SkillCoins
                       </p>

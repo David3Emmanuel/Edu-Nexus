@@ -34,7 +34,9 @@ export default function NewChallengePage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
 
-  const [formData, setFormData] = useState<Partial<ChallengePayload> & { tags: string }>({ 
+  const [formData, setFormData] = useState<
+    Partial<ChallengePayload> & { tags: string }
+  >({
     title: '',
     description: '',
     difficulty: 'Intermediate',
@@ -49,7 +51,7 @@ export default function NewChallengePage() {
         const currentUser = await getCurrentUser()
         setUser(currentUser)
       } catch (error) {
-        console.error("Failed to fetch user", error)
+        console.error('Failed to fetch user', error)
         // Handle error, maybe redirect to login
         router.push('/login')
       }
@@ -103,7 +105,11 @@ export default function NewChallengePage() {
       newErrors.description = 'Description must be at least 50 characters long'
     }
 
-    if (!formData.skillCoins || formData.skillCoins < 10 || formData.skillCoins > 100) {
+    if (
+      !formData.skillCoins ||
+      formData.skillCoins < 10 ||
+      formData.skillCoins > 100
+    ) {
       newErrors.skillCoins = 'Skill coins must be between 10 and 100'
     }
 
@@ -116,7 +122,7 @@ export default function NewChallengePage() {
 
     if (!validateForm() || !user) {
       if (!user) {
-        setSubmitError("You must be logged in to create a challenge.")
+        setSubmitError('You must be logged in to create a challenge.')
       }
       return
     }
@@ -133,9 +139,12 @@ export default function NewChallengePage() {
         category: formData.category!,
         skillCoins: formData.skillCoins!,
         author: user.id,
-        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
-      };
-      
+        tags: formData.tags
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean),
+      }
+
       const data = await createChallenge(payload)
 
       setSubmitSuccess(true)
@@ -349,7 +358,7 @@ export default function NewChallengePage() {
                     }`}
                   />
                   <div className='absolute right-5 top-1/2 transform -translate-y-1/2'>
-                    <SkillCoin count={formData.skillCoins} />
+                    <SkillCoin count={formData.skillCoins ?? 0} />
                   </div>
                 </div>
                 {errors.skillCoins && (
