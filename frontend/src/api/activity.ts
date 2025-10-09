@@ -1,6 +1,6 @@
 import { formatStrapiCollection } from './client'
 import { getFromApi } from '@/app/actions/api.actions'
-import type { Challenge, Response } from './challenges'
+import type { Challenge, Response, Tag } from './challenges'
 import type { User, Badge } from './users'
 
 // Raw activity data from Strapi
@@ -22,7 +22,7 @@ export interface UiActivity {
   author: User
   upvotes?: number
   responses?: number
-  tags?: any[]
+  tags?: Tag[]
   timeAgo: string
   challengeId?: number
   createdAt: string

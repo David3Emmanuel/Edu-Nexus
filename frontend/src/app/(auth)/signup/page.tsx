@@ -93,8 +93,6 @@ export default function SignupPage() {
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        confirmPassword: formData.confirmPassword,
-        agreeToTerms: formData.agreeToTerms,
       })
 
       if (response.success) {
