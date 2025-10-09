@@ -2,8 +2,12 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import Link from 'next/link'
+import { getLoggedInUser, logout } from '@/app/actions/auth.actions' // Import getLoggedInUser and logout
 
-export default function Home() {
+export default async function Home() {
+  // Make Home an async component
+  const { success, user } = await getLoggedInUser() // Get login status
+
   return (
     <div className='min-h-screen bg-bg-light'>
       {/* Header */}
@@ -34,14 +38,31 @@ export default function Home() {
               </Link>
             </nav>
             <div className='flex items-center space-x-4'>
-              <Link href='/login'>
-                <Button variant='outline' size='sm'>
-                  Login
-                </Button>
-              </Link>
-              <Link href='/signup'>
-                <Button size='sm'>Get Started</Button>
-              </Link>
+              {success && user ? (
+                <>
+                  <Link href='/dashboard'>
+                    <Button variant='outline' size='sm'>
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <form action={logout}>
+                    <Button type='submit' size='sm'>
+                      Sign Out
+                    </Button>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <Link href='/login'>
+                    <Button variant='outline' size='sm'>
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href='/signup'>
+                    <Button size='sm'>Get Started</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

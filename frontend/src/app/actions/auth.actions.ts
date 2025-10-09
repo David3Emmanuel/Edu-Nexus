@@ -127,3 +127,42 @@ export async function forgotPassword(email: string): Promise<AuthResponse> {
     }
   }
 }
+
+export async function getLoggedInUser(): Promise<AuthResponse> {
+  try {
+    const jwt = (await cookies()).get('jwt')?.value;
+
+    if (!jwt) {
+      return { success: false, message: 'No JWT found.' };
+    }
+
+    const res = await fetch(`${STRAPI_URL}/api/users/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`,
+      },
+    });
+
+    const resData = await res.json();
+
+    if (resData.error) {
+      (await cookies()).delete('jwt');
+      return { success: false, message: resData.error.message };
+    }
+
+    return {
+      success: true,
+      user: {
+        id: resData.id,
+        name: resData.username,
+        email: resData.email,
+      },
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || 'Failed to get logged in user.',
+    };
+  }
+}
