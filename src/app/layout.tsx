@@ -21,7 +21,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${manrope.variable} antialiased`}>{children}</body>
+      <body className={`${manrope.variable} antialiased`}>
+        {children}
+        <footer className='w-full bg-neutral-100 p-4 text-center text-sm text-neutral-500'>
+          Made by{' '}
+          <a
+            href='https://david3emmanuel.vercel.app'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='font-semibold text-neutral-600 hover:text-neutral-700'
+          >
+            David Emmmanuel
+          </a>
+        </footer>
+      </body>
     </html>
   )
 }
