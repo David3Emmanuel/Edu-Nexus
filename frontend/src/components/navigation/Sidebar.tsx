@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
 } from 'lucide-react'
+import { logout } from '@/app/actions/auth.actions'
 
 const navigationItems = [
   {
@@ -138,7 +139,7 @@ export function Sidebar() {
                   )
                 })}
                 <li>
-                  <button className='group flex w-full gap-x-3 rounded-lg p-3 text-sm font-semibold leading-6 text-neutral-700 hover:text-danger hover:bg-neutral-50 transition-all duration-200'>
+                  <button onClick={() => logout()} className='group flex w-full gap-x-3 rounded-lg p-3 text-sm font-semibold leading-6 text-neutral-700 hover:text-danger hover:bg-neutral-50 transition-all duration-200'>
                     <LogOut
                       className='h-6 w-6 shrink-0 text-neutral-400 group-hover:text-danger'
                       aria-hidden='true'

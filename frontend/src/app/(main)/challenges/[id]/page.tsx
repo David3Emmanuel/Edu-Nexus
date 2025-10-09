@@ -102,12 +102,12 @@ export default async function ChallengeDetail({
                     <div className='flex items-center gap-2'>
                       <div className='w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center'>
                         <span className='text-white font-medium text-xs'>
-                          {challengeData.author.charAt(0)}
+                          {challengeData.author.username.charAt(0)}
                         </span>
                       </div>
                       <span>
-                        by <strong>{challengeData.author}</strong> (
-                        {challengeData.authorType})
+                        by <strong>{challengeData.author.username}</strong> (
+                        {challengeData.author.type})
                       </span>
                     </div>
                     <span>•</span>
@@ -117,12 +117,12 @@ export default async function ChallengeDetail({
                   </div>
 
                   <div className='flex flex-wrap gap-2'>
-                    {challengeData.tags.map((tag, index) => (
+                    {challengeData.tags.map((tag) => (
                       <span
-                        key={index}
+                        key={tag.id}
                         className='px-3 py-1 bg-gray-100 text-sm rounded-md text-gray-600'
                       >
-                        {tag}
+                        {tag.name}
                       </span>
                     ))}
                   </div>
@@ -130,11 +130,10 @@ export default async function ChallengeDetail({
               </div>
 
               {/* Challenge Description */}
-              <div className='prose max-w-none'>
-                <div className='whitespace-pre-wrap text-gray-700 leading-relaxed'>
-                  {challengeData.description}
-                </div>
-              </div>
+              <div
+                className='prose max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed'
+                dangerouslySetInnerHTML={{ __html: challengeData.description }}
+              ></div>
 
               {/* Challenge Actions */}
               <div className='flex items-center justify-between mt-8 pt-6 border-t'>
@@ -247,13 +246,13 @@ export default async function ChallengeDetail({
                                 }`}
                               >
                                 <span className='text-white font-medium text-sm'>
-                                  {response.author.charAt(0)}
+                                  {response.author.username.charAt(0)}
                                 </span>
                               </div>
                               <div>
                                 <div className='flex items-center gap-2'>
                                   <h3 className='font-medium text-text-dark'>
-                                    {response.author}
+                                    {response.author.username}
                                   </h3>
                                   {isTopAnswer && (
                                     <span className='text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium'>
@@ -267,17 +266,21 @@ export default async function ChallengeDetail({
                                   )}
                                 </div>
                                 <p className='text-sm text-gray-600'>
-                                  {response.authorType} • {response.university}{' '}
-                                  • {response.timeAgo}
+                                  {response.author.type} •{' '}
+                                  {response.author.university} •{' '}
+                                  {new Date(
+                                    response.createdAt,
+                                  ).toLocaleDateString()}
                                 </p>
                               </div>
                             </div>
 
-                            <div className='prose max-w-none'>
-                              <div className='whitespace-pre-wrap text-gray-700 leading-relaxed'>
-                                {response.content}
-                              </div>
-                            </div>
+                            <div
+                              className='prose max-w-none whitespace-pre-wrap text-gray-700 leading-relaxed'
+                              dangerouslySetInnerHTML={{
+                                __html: response.content,
+                              }}
+                            ></div>
 
                             <div className='flex items-center gap-4 mt-4 pt-4 border-t'>
                               <Button variant='outline' size='sm'>
@@ -378,18 +381,18 @@ export default async function ChallengeDetail({
               <div className='flex items-start gap-3'>
                 <div className='w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center'>
                   <span className='text-white font-medium'>
-                    {challengeData.author.charAt(0)}
+                    {challengeData.author.username.charAt(0)}
                   </span>
                 </div>
                 <div className='flex-1'>
                   <h4 className='font-medium text-text-dark'>
-                    {challengeData.author}
+                    {challengeData.author.username}
                   </h4>
                   <p className='text-sm text-gray-600 mb-2'>
-                    {challengeData.authorType}
+                    {challengeData.author.type}
                   </p>
                   <p className='text-xs text-gray-500 leading-relaxed'>
-                    {challengeData.authorBio}
+                    {challengeData.author.bio}
                   </p>
                 </div>
               </div>

@@ -3,8 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button, Input } from '@/components/ui'
+import { login } from '@/app/actions/auth.actions'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -16,8 +19,8 @@ export default function LoginPage() {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }))
+    if (errors[name] || errors.general) {
+      setErrors((prev) => ({ ...prev, [name]: '', general: '' }))
     }
   }
 
@@ -50,17 +53,23 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      // TODO: Implement actual authentication logic
-      console.log('Login attempt:', formData)
+      const response = await login({
+        email: formData.email,
+        password: formData.password,
+      })
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // For now, just redirect to dashboard
-      window.location.href = '/dashboard'
+      if (response.success) {
+        router.push('/dashboard')
+      } else {
+        setErrors({
+          general: response.message || 'Login failed. Please try again.',
+        })
+      }
     } catch (error) {
       console.error('Login error:', error)
-      setErrors({ general: 'Login failed. Please try again.' })
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unexpected error occurred.'
+      setErrors({ general: errorMessage })
     } finally {
       setIsLoading(false)
     }

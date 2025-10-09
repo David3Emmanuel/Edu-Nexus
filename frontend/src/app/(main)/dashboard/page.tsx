@@ -18,7 +18,7 @@ export default async function Dashboard() {
             {/* Welcome Header */}
             <div className='mb-8'>
               <h1 className='text-3xl font-bold text-text-dark mb-2'>
-                Welcome back, {user.name}! 👋
+                Welcome back, {user.username}! 👋
               </h1>
               <p className='text-gray-600'>
                 Ready to tackle some challenges and earn more SkillCoins?
@@ -34,7 +34,11 @@ export default async function Dashboard() {
                     <SkillCoin count={0} size='sm' />
                   </div>
                 </div>
-                <SkillCoin count={user.skillCoins} size='lg' showAnimation />
+                <SkillCoin
+                  count={user.skillCoins ?? 0}
+                  size='lg'
+                  showAnimation
+                />
               </div>
 
               <div className='bg-white p-6 rounded-xl shadow-sm border'>
@@ -131,17 +135,15 @@ export default async function Dashboard() {
                         <h3 className='font-medium text-text-dark mb-1 hover:text-primary cursor-pointer'>
                           {activity.title}
                         </h3>
-                        {activity.author && (
-                          <p className='text-sm text-gray-600 mb-2'>
-                            by {activity.author}
-                          </p>
-                        )}
+                        <p className='text-sm text-gray-600 mb-2'>
+                          by {activity.author.username}
+                        </p>
                         <div className='flex items-center gap-4 text-sm text-gray-500'>
                           <span>{activity.timeAgo}</span>
                           <div className='flex items-center gap-1'>
                             <Upvote initialCount={activity.upvotes || 0} />
                           </div>
-                          {activity.responses && (
+                          {activity.responses !== undefined && (
                             <span>{activity.responses} responses</span>
                           )}
                         </div>
@@ -151,7 +153,7 @@ export default async function Dashboard() {
                               key={index}
                               className='px-2 py-1 bg-gray-100 text-xs rounded-md text-gray-600'
                             >
-                              {tag}
+                              {tag.name}
                             </span>
                           ))}
                         </div>
@@ -170,11 +172,11 @@ export default async function Dashboard() {
               <div className='text-center mb-6'>
                 <div className='w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center'>
                   <span className='text-2xl text-white font-bold'>
-                    {user.name.charAt(0)}
+                    {user.username.charAt(0)}
                   </span>
                 </div>
                 <h3 className='font-bold text-text-dark text-lg'>
-                  {user.name}
+                  {user.username}
                 </h3>
                 <p className='text-gray-600 text-sm'>
                   Computer Science Student

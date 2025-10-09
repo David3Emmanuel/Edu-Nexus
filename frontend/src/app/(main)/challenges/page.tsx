@@ -180,17 +180,17 @@ export default async function Challenges() {
                     </Link>
 
                     <p className='text-gray-600 mb-4 leading-relaxed'>
-                      {challenge.description}
+                      {challenge.description.substring(0, 150)}...
                     </p>
 
                     {/* Tags */}
                     <div className='flex flex-wrap gap-2 mb-4'>
-                      {challenge.tags.map((tag, index) => (
+                      {challenge.tags.map((tag) => (
                         <span
-                          key={index}
+                          key={tag.id}
                           className='px-2 py-1 bg-gray-100 text-xs rounded-md text-gray-600'
                         >
-                          {tag}
+                          {tag.name}
                         </span>
                       ))}
                     </div>
@@ -201,12 +201,13 @@ export default async function Challenges() {
                         <span>
                           by{' '}
                           <span className='font-medium'>
-                            {challenge.author}
+                            {challenge.author.username}
                           </span>{' '}
-                          ({challenge.authorType})
+                          ({challenge.author.type})
                         </span>
                         <span>•</span>
                         <span>{challenge.timeAgo}</span>
+
                         <span>•</span>
                         <span>{challenge.responses.length} responses</span>
                       </div>

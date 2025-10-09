@@ -2,117 +2,16 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
+import { getCurrentUser, getUserActivity, UiActivity } from '@/api'
+import { notFound } from 'next/navigation'
 
-// Mock user profile data
-const userProfile = {
-  name: 'Aisha Johnson',
-  bio: 'Final year Computer Science student passionate about machine learning and sustainable technology. Active contributor to open-source projects and mentor for underclassmen.',
-  university: 'MIT',
-  program: 'Computer Science (B.S.)',
-  graduationYear: 2025,
-  location: 'Cambridge, MA',
-  joinedDate: 'September 2024',
-  skillCoins: 1247,
-  globalRank: 3,
-  weeklyRank: 2,
-  totalContributions: 42,
-  profileViews: 156,
-  badges: [
-    {
-      title: 'Top Contributor',
-      icon: '🏆',
-      gradient: 'blue' as const,
-      description: 'Earned for 25+ quality contributions',
-      earnedDate: '2 weeks ago',
-    },
-    {
-      title: 'Problem Solver',
-      icon: '💡',
-      gradient: 'green' as const,
-      description: 'Provided 10 accepted solutions',
-      earnedDate: '1 month ago',
-    },
-    {
-      title: 'Mentor',
-      icon: '🎓',
-      gradient: 'purple' as const,
-      description: 'Helped 20+ fellow students',
-      earnedDate: '3 weeks ago',
-    },
-    {
-      title: 'Team Player',
-      icon: '🤝',
-      gradient: 'orange' as const,
-      description: 'Collaborated on 5+ group challenges',
-      earnedDate: '1 week ago',
-    },
-    {
-      title: 'Rising Star',
-      icon: '🌟',
-      gradient: 'orange' as const,
-      description: 'Fastest growing contributor this month',
-      earnedDate: '4 days ago',
-    },
-    {
-      title: 'Knowledge Expert',
-      icon: '📚',
-      gradient: 'blue' as const,
-      description: 'Deep expertise in ML/AI topics',
-      earnedDate: '2 months ago',
-    },
-  ],
-  contributions: [
-    {
-      id: 1,
-      type: 'challenge',
-      title:
-        'How to implement real-time collaborative editing like Google Docs?',
-      upvotes: 34,
-      responses: 12,
-      tags: ['#WebDev', '#RealTime', '#Collaboration'],
-      timeAgo: '2 days ago',
-    },
-    {
-      id: 2,
-      type: 'answer',
-      title:
-        'Answered: "Best practices for training large language models on limited compute?"',
-      upvotes: 28,
-      challengeTitle:
-        'Best practices for training large language models on limited compute?',
-      tags: ['#MachineLearning', '#NLP', '#Optimization'],
-      timeAgo: '5 days ago',
-    },
-    {
-      id: 3,
-      type: 'challenge',
-      title: 'Design a carbon footprint tracking app for universities',
-      upvotes: 67,
-      responses: 23,
-      tags: ['#Sustainability', '#MobileApp', '#Design'],
-      timeAgo: '1 week ago',
-    },
-    {
-      id: 4,
-      type: 'answer',
-      title: 'Answered: "How to handle data privacy in IoT sensor networks?"',
-      upvotes: 19,
-      challengeTitle: 'How to handle data privacy in IoT sensor networks?',
-      tags: ['#IoT', '#Privacy', '#Security'],
-      timeAgo: '2 weeks ago',
-    },
-  ],
-  skills: [
-    { name: 'Machine Learning', level: 'Advanced', endorsements: 12 },
-    { name: 'Python', level: 'Advanced', endorsements: 15 },
-    { name: 'JavaScript/React', level: 'Intermediate', endorsements: 8 },
-    { name: 'Data Science', level: 'Advanced', endorsements: 10 },
-    { name: 'System Design', level: 'Intermediate', endorsements: 6 },
-    { name: 'Sustainability', level: 'Beginner', endorsements: 4 },
-  ],
-}
+export default async function Profile() {
+  const userProfile = await getCurrentUser()
+  if (!userProfile) {
+    notFound()
+  }
+  const contributions: UiActivity[] = await getUserActivity(userProfile.id)
 
-export default function Profile() {
   return (
     <>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -125,7 +24,7 @@ export default function Profile() {
                 <div className='flex-shrink-0'>
                   <div className='w-24 h-24 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center'>
                     <span className='text-3xl text-white font-bold'>
-                      {userProfile.name.charAt(0)}
+                      {userProfile.username.charAt(0)}
                     </span>
                   </div>
                 </div>
@@ -134,14 +33,14 @@ export default function Profile() {
                   <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4'>
                     <div>
                       <h1 className='text-3xl font-bold text-text-dark mb-2'>
-                        {userProfile.name}
+                        {userProfile.username}
                       </h1>
                       <p className='text-gray-600 mb-2'>
                         {userProfile.program} • {userProfile.university}
                       </p>
                       <p className='text-sm text-gray-500'>
                         📍 {userProfile.location} • Joined{' '}
-                        {userProfile.joinedDate}
+                        {new Date(userProfile.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div className='flex gap-3 mt-4 sm:mt-0'>
@@ -179,7 +78,7 @@ export default function Profile() {
                     </div>
                     <div className='text-center'>
                       <div className='text-2xl font-bold text-primary'>
-                        #{userProfile.globalRank}
+                        #{userProfile.rank}
                       </div>
                       <p className='text-xs text-gray-500'>Global Rank</p>
                     </div>
@@ -212,15 +111,12 @@ export default function Profile() {
               </div>
 
               <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-                {userProfile.badges.map((badge, index) => (
-                  <div key={index} className='text-center group'>
+                {userProfile.badges.map((badge) => (
+                  <div key={badge.id} className='text-center group'>
                     <Badge {...badge} size='md' />
                     <div className='mt-2 opacity-0 group-hover:opacity-100 transition-opacity'>
                       <p className='text-xs text-gray-600'>
                         {badge.description}
-                      </p>
-                      <p className='text-xs text-gray-400 mt-1'>
-                        Earned {badge.earnedDate}
                       </p>
                     </div>
                   </div>
@@ -241,34 +137,15 @@ export default function Profile() {
                 Skills & Expertise
               </h2>
 
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                {userProfile.skills.map((skill, index) => (
+              <div className='flex flex-wrap gap-2'>
+                {userProfile.specialties?.map((specialty) => (
                   <div
-                    key={index}
-                    className='p-4 border rounded-lg hover:shadow-sm transition-shadow'
+                    key={specialty.id}
+                    className='p-3 border rounded-lg bg-gray-50'
                   >
-                    <div className='flex items-center justify-between mb-2'>
-                      <h3 className='font-medium text-text-dark'>
-                        {skill.name}
-                      </h3>
-                      <span
-                        className={`px-2 py-1 text-xs rounded-full ${
-                          skill.level === 'Advanced'
-                            ? 'bg-green-100 text-green-700'
-                            : skill.level === 'Intermediate'
-                            ? 'bg-yellow-100 text-yellow-700'
-                            : 'bg-blue-100 text-blue-700'
-                        }`}
-                      >
-                        {skill.level}
-                      </span>
-                    </div>
-                    <div className='flex items-center gap-2 text-sm text-gray-600'>
-                      <span>👍 {skill.endorsements} endorsements</span>
-                      <button className='text-primary hover:text-blue-600 transition-colors'>
-                        Endorse
-                      </button>
-                    </div>
+                    <h3 className='font-medium text-text-dark'>
+                      {specialty.name}
+                    </h3>
                   </div>
                 ))}
               </div>
@@ -281,7 +158,7 @@ export default function Profile() {
               </h2>
 
               <div className='space-y-6'>
-                {userProfile.contributions.map((contribution) => (
+                {contributions.map((contribution) => (
                   <div
                     key={contribution.id}
                     className='border-l-4 border-primary pl-6 pb-6 last:pb-0'
@@ -331,30 +208,26 @@ export default function Profile() {
                         <h3 className='font-medium text-text-dark mb-1 hover:text-primary cursor-pointer'>
                           {contribution.title}
                         </h3>
-                        {contribution.challengeTitle && (
-                          <p className='text-sm text-gray-600 mb-2'>
-                            Challenge: {contribution.challengeTitle}
-                          </p>
-                        )}
+
                         <div className='flex items-center gap-4 text-sm text-gray-500 mb-2'>
                           <span>{contribution.timeAgo}</span>
                           <div className='flex items-center gap-1'>
                             <Upvote
-                              initialCount={contribution.upvotes}
+                              initialCount={contribution.upvotes || 0}
                               disabled
                             />
                           </div>
-                          {contribution.responses && (
+                          {contribution.responses !== undefined && (
                             <span>{contribution.responses} responses</span>
                           )}
                         </div>
                         <div className='flex flex-wrap gap-2'>
-                          {contribution.tags.map((tag, tagIndex) => (
+                          {contribution.tags?.map((tag, tagIndex) => (
                             <span
                               key={tagIndex}
                               className='px-2 py-1 bg-gray-100 text-xs rounded-md text-gray-600'
                             >
-                              {tag}
+                              {tag.name}
                             </span>
                           ))}
                         </div>

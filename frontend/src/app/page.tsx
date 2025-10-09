@@ -200,7 +200,9 @@ export default function Home() {
                       {user.rank}
                     </div>
                     <div>
-                      <h4 className='font-bold text-text-dark'>{user.name}</h4>
+                      <h4 className='font-bold text-text-dark'>
+                        {user.username}
+                      </h4>
                       <p className='text-sm text-gray-600'>
                         {user.badges} badges earned
                       </p>

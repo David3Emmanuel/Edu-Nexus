@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button, Input } from '@/components/ui'
+import { forgotPassword } from '@/app/actions/auth.actions'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -27,16 +28,20 @@ export default function ForgotPasswordPage() {
     setError('')
 
     try {
-      // TODO: Implement actual password reset logic
-      console.log('Password reset request for:', email)
+      const response = await forgotPassword(email)
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      setIsSubmitted(true)
+      if (response.success) {
+        setIsSubmitted(true)
+      } else {
+        setError(
+          response.message || 'Failed to send reset email. Please try again.',
+        )
+      }
     } catch (error) {
       console.error('Password reset error:', error)
-      setError('Failed to send reset email. Please try again.')
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unexpected error occurred.'
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

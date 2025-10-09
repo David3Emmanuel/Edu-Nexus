@@ -33,11 +33,13 @@ function Avatar({
 
   const baseClasses = `${sizeClasses[size]} rounded-full flex items-center justify-center font-medium ${className}`
 
-  if (user.avatar) {
+  if (user.avatar?.url) {
     return (
       <Image
-        src={user.avatar}
-        alt={user.name}
+        src={user.avatar.url}
+        alt={user.username}
+        width={80}
+        height={80}
         className={`${baseClasses} object-cover`}
       />
     )
@@ -47,7 +49,7 @@ function Avatar({
     <div
       className={`${baseClasses} bg-gradient-to-br from-primary to-blue-600 text-white`}
     >
-      {getInitials(user.name)}
+      {getInitials(user.username)}
     </div>
   )
 }
@@ -71,100 +73,102 @@ export default async function Leaderboard() {
         </div>
 
         {/* Top 3 Podium */}
-        <div className='mb-16'>
-          <div className='grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto'>
-            {/* Second Place */}
-            <div className='md:order-1 flex flex-col items-center'>
-              <div className='bg-white rounded-2xl shadow-lg border p-6 text-center transform md:-translate-y-4'>
-                <div className='mx-auto flex justify-center'>
-                  <Avatar
-                    user={topContributors[1]}
-                    size='lg'
-                    className='bg-gradient-to-br from-gray-400 to-gray-600'
-                  />
-                </div>
-                <div className='w-8 h-8 bg-gray-400 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold'>
-                  2
-                </div>
-                <h3 className='font-bold text-text-dark text-lg mb-1'>
-                  {topContributors[1].name}
-                </h3>
-                <p className='text-sm text-gray-600 mb-3'>
-                  {topContributors[1].university}
-                </p>
-                <SkillCoin count={topContributors[1].skillCoins} size='md' />
-                <div className='flex justify-center gap-2 mt-4'>
-                  {topContributors[1].badges.slice(0, 2).map((badge, index) => (
-                    <Badge key={index} {...badge} size='sm' />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* First Place */}
-            <div className='md:order-2 flex flex-col items-center'>
-              <div className='bg-white rounded-2xl shadow-xl border-2 border-yellow-200 p-8 text-center relative'>
-                <div className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold'>
-                  👑 Champion
-                </div>
-                <div className='mx-auto flex justify-center'>
-                  <Avatar
-                    user={topContributors[0]}
-                    size='xl'
-                    className='bg-gradient-to-br from-yellow-400 to-yellow-600'
-                  />
-                </div>
-                <div className='w-10 h-10 bg-yellow-500 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold text-lg'>
-                  1
-                </div>
-                <h3 className='font-bold text-text-dark text-xl mb-1'>
-                  {topContributors[0].name}
-                </h3>
-                <p className='text-sm text-gray-600 mb-3'>
-                  {topContributors[0].university}
-                </p>
-                <SkillCoin
-                  count={topContributors[0].skillCoins}
-                  size='lg'
-                  showAnimation
-                />
-                <div className='flex justify-center gap-2 mt-4'>
-                  {topContributors[0].badges.map((badge, index) => (
-                    <Badge key={index} {...badge} size='sm' />
-                  ))}
+        {topContributors.length >= 3 && (
+          <div className='mb-16'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto'>
+              {/* Second Place */}
+              <div className='md:order-1 flex flex-col items-center'>
+                <div className='bg-white rounded-2xl shadow-lg border p-6 text-center transform md:-translate-y-4'>
+                  <div className='mx-auto flex justify-center'>
+                    <Avatar
+                      user={topContributors[1]}
+                      size='lg'
+                      className='bg-gradient-to-br from-gray-400 to-gray-600'
+                    />
+                  </div>
+                  <div className='w-8 h-8 bg-gray-400 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold'>
+                    2
+                  </div>
+                  <h3 className='font-bold text-text-dark text-lg mb-1'>
+                    {topContributors[1].username}
+                  </h3>
+                  <p className='text-sm text-gray-600 mb-3'>
+                    {topContributors[1].university}
+                  </p>
+                  <SkillCoin count={topContributors[1].skillCoins} size='md' />
+                  <div className='flex justify-center gap-2 mt-4'>
+                    {topContributors[1].badges.slice(0, 2).map((badge) => (
+                      <Badge key={badge.id} {...badge} size='sm' />
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Third Place */}
-            <div className='md:order-3 flex flex-col items-center'>
-              <div className='bg-white rounded-2xl shadow-lg border p-6 text-center transform md:-translate-y-4'>
-                <div className='mx-auto flex justify-center'>
-                  <Avatar
-                    user={topContributors[2]}
+              {/* First Place */}
+              <div className='md:order-2 flex flex-col items-center'>
+                <div className='bg-white rounded-2xl shadow-xl border-2 border-yellow-200 p-8 text-center relative'>
+                  <div className='absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-bold'>
+                    👑 Champion
+                  </div>
+                  <div className='mx-auto flex justify-center'>
+                    <Avatar
+                      user={topContributors[0]}
+                      size='xl'
+                      className='bg-gradient-to-br from-yellow-400 to-yellow-600'
+                    />
+                  </div>
+                  <div className='w-10 h-10 bg-yellow-500 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold text-lg'>
+                    1
+                  </div>
+                  <h3 className='font-bold text-text-dark text-xl mb-1'>
+                    {topContributors[0].username}
+                  </h3>
+                  <p className='text-sm text-gray-600 mb-3'>
+                    {topContributors[0].university}
+                  </p>
+                  <SkillCoin
+                    count={topContributors[0].skillCoins}
                     size='lg'
-                    className='bg-gradient-to-br from-orange-400 to-orange-600'
+                    showAnimation
                   />
+                  <div className='flex justify-center gap-2 mt-4'>
+                    {topContributors[0].badges.map((badge) => (
+                      <Badge key={badge.id} {...badge} size='sm' />
+                    ))}
+                  </div>
                 </div>
-                <div className='w-8 h-8 bg-orange-500 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold'>
-                  3
-                </div>
-                <h3 className='font-bold text-text-dark text-lg mb-1'>
-                  {topContributors[2].name}
-                </h3>
-                <p className='text-sm text-gray-600 mb-3'>
-                  {topContributors[2].university}
-                </p>
-                <SkillCoin count={topContributors[2].skillCoins} size='md' />
-                <div className='flex justify-center gap-2 mt-4'>
-                  {topContributors[2].badges.map((badge, index) => (
-                    <Badge key={index} {...badge} size='sm' />
-                  ))}
+              </div>
+
+              {/* Third Place */}
+              <div className='md:order-3 flex flex-col items-center'>
+                <div className='bg-white rounded-2xl shadow-lg border p-6 text-center transform md:-translate-y-4'>
+                  <div className='mx-auto flex justify-center'>
+                    <Avatar
+                      user={topContributors[2]}
+                      size='lg'
+                      className='bg-gradient-to-br from-orange-400 to-orange-600'
+                    />
+                  </div>
+                  <div className='w-8 h-8 bg-orange-500 text-white rounded-full mx-auto mb-3 flex items-center justify-center font-bold'>
+                    3
+                  </div>
+                  <h3 className='font-bold text-text-dark text-lg mb-1'>
+                    {topContributors[2].username}
+                  </h3>
+                  <p className='text-sm text-gray-600 mb-3'>
+                    {topContributors[2].university}
+                  </p>
+                  <SkillCoin count={topContributors[2].skillCoins} size='md' />
+                  <div className='flex justify-center gap-2 mt-4'>
+                    {topContributors[2].badges.map((badge) => (
+                      <Badge key={badge.id} {...badge} size='sm' />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Filters and Controls */}
         <div className='bg-white rounded-xl shadow-sm border p-6 mb-8'>
@@ -255,7 +259,7 @@ export default async function Leaderboard() {
                         </div>
                         <div>
                           <div className='text-sm font-medium text-text-dark'>
-                            {user.name}
+                            {user.username}
                           </div>
                           <div className='text-sm text-gray-500'>
                             {user.type} • {user.university}
@@ -291,12 +295,12 @@ export default async function Leaderboard() {
 
                     <td className='px-6 py-4'>
                       <div className='flex flex-wrap gap-1'>
-                        {user.specialties?.map((specialty, idx) => (
+                        {user.specialties?.map((specialty) => (
                           <span
-                            key={idx}
+                            key={specialty.id}
                             className='inline-block px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded'
                           >
-                            {specialty}
+                            {specialty.name}
                           </span>
                         ))}
                       </div>

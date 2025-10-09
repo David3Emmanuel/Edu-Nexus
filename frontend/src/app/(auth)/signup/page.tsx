@@ -3,8 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button, Input } from '@/components/ui'
+import { signup } from '@/app/actions/auth.actions'
+import { useRouter } from 'next/navigation'
 
 export default function SignupPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -30,8 +33,8 @@ export default function SignupPage() {
     }))
 
     // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }))
+    if (errors[name] || errors.general) {
+      setErrors((prev) => ({ ...prev, [name]: '', general: '' }))
     }
   }
 
@@ -85,17 +88,27 @@ export default function SignupPage() {
     setIsLoading(true)
 
     try {
-      // TODO: Implement actual registration logic
-      console.log('Registration attempt:', formData)
+      const response = await signup({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        agreeToTerms: formData.agreeToTerms,
+      })
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      // For now, just redirect to dashboard
-      window.location.href = '/dashboard'
+      if (response.success) {
+        router.push('/dashboard')
+      } else {
+        setErrors({
+          general: response.message || 'Registration failed. Please try again.',
+        })
+      }
     } catch (error) {
       console.error('Registration error:', error)
-      setErrors({ general: 'Registration failed. Please try again.' })
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unexpected error occurred.'
+      setErrors({ general: errorMessage })
     } finally {
       setIsLoading(false)
     }

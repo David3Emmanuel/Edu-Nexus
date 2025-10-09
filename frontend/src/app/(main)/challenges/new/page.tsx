@@ -34,26 +34,29 @@ export default function NewChallengePage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getCurrentUser()
-      setUser(user)
-    }
-
-    fetchUser()
-  }, [])
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Partial<ChallengePayload> & { tags: string }>({ 
     title: '',
     description: '',
     difficulty: 'Intermediate',
     category: 'Academic Q&A',
     skillCoins: 30,
-    tags: [],
-    author: user?.name || '',
-    authorType: user?.type || 'Student',
-    authorBio: '',
-  } as ChallengePayload)
+    tags: '',
+  })
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await getCurrentUser()
+        setUser(currentUser)
+      } catch (error) {
+        console.error("Failed to fetch user", error)
+        // Handle error, maybe redirect to login
+        router.push('/login')
+      }
+    }
+
+    fetchUser()
+  }, [router])
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -68,7 +71,7 @@ export default function NewChallengePage() {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'skillCoins' ? parseInt(value, 10) : value,
     }))
 
     // Clear error when user starts typing
@@ -88,19 +91,19 @@ export default function NewChallengePage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.title.trim()) {
+    if (!formData.title || !formData.title.trim()) {
       newErrors.title = 'Title is required'
     } else if (formData.title.length < 10) {
       newErrors.title = 'Title must be at least 10 characters long'
     }
 
-    if (!formData.description.trim()) {
+    if (!formData.description || !formData.description.trim()) {
       newErrors.description = 'Description is required'
     } else if (formData.description.length < 50) {
       newErrors.description = 'Description must be at least 50 characters long'
     }
 
-    if (formData.skillCoins < 10 || formData.skillCoins > 100) {
+    if (!formData.skillCoins || formData.skillCoins < 10 || formData.skillCoins > 100) {
       newErrors.skillCoins = 'Skill coins must be between 10 and 100'
     }
 
@@ -111,7 +114,10 @@ export default function NewChallengePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!validateForm()) {
+    if (!validateForm() || !user) {
+      if (!user) {
+        setSubmitError("You must be logged in to create a challenge.")
+      }
       return
     }
 
@@ -120,7 +126,17 @@ export default function NewChallengePage() {
     setSubmitSuccess(false)
 
     try {
-      const data = await createChallenge(formData)
+      const payload: ChallengePayload = {
+        title: formData.title!,
+        description: formData.description!,
+        difficulty: formData.difficulty!,
+        category: formData.category!,
+        skillCoins: formData.skillCoins!,
+        author: user.id,
+        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+      };
+      
+      const data = await createChallenge(payload)
 
       setSubmitSuccess(true)
 
