@@ -1,3 +1,5 @@
+import { get, formatStrapiCollection, formatStrapiData } from './client';
+
 // User data and related API functions
 export interface User {
   id: number
@@ -29,153 +31,30 @@ export interface Badge {
   earnedDate?: string
 }
 
-// Current user data
-export const currentUser: User = {
-  id: 1,
-  name: 'Aisha Johnson',
-  email: 'aisha.johnson@mit.edu',
-  type: 'Student',
-  university: 'MIT',
-  program: 'Computer Science (B.S.)',
-  graduationYear: 2025,
-  location: 'Cambridge, MA',
-  joinedDate: 'September 2024',
-  bio: 'Final year Computer Science student passionate about machine learning and sustainable technology. Active contributor to open-source projects and mentor for underclassmen.',
-  rank: 3,
-  skillCoins: 1247,
-  weeklyRank: 2,
-  totalContributions: 42,
-  profileViews: 156,
-  badges: [
-    {
-      title: 'Top Contributor',
-      icon: '🏆',
-      gradient: 'blue',
-      description: 'Earned for 25+ quality contributions',
-      earnedDate: '2 weeks ago',
-    },
-    {
-      title: 'Problem Solver',
-      icon: '💡',
-      gradient: 'green',
-      description: 'Provided 10 accepted solutions',
-      earnedDate: '1 month ago',
-    },
-    {
-      title: 'Mentor',
-      icon: '🎓',
-      gradient: 'purple',
-      description: 'Helped 20+ fellow students',
-      earnedDate: '3 weeks ago',
-    },
-    {
-      title: 'Team Player',
-      icon: '🤝',
-      gradient: 'orange',
-      description: 'Collaborated on 5+ group challenges',
-      earnedDate: '1 week ago',
-    },
-  ],
-}
-
-// Leaderboard data
-const manuallyAddedUsers: User[] = [
-  {
-    id: 1001,
-    name: 'Aisha Johnson',
-    type: 'Student',
-    university: 'MIT',
-    rank: 1,
-    skillCoins: 2847,
-    weeklyRank: 1,
-    totalContributions: 45,
-    badges: [
-      { title: 'Top Contributor', icon: '🏆', gradient: 'blue' },
-      { title: 'Problem Solver', icon: '💡', gradient: 'green' },
-      { title: 'Mentor', icon: '🎓', gradient: 'purple' },
-    ],
-    weeklyGain: 234,
-    specialties: ['Machine Learning', 'Data Science'],
-  },
-  {
-    id: 1002,
-    name: 'Dr. Marcus Chen',
-    type: 'Lecturer',
-    university: 'Stanford',
-    rank: 2,
-    skillCoins: 2156,
-    weeklyRank: 2,
-    totalContributions: 38,
-    badges: [
-      { title: 'Expert', icon: '⭐', gradient: 'orange' },
-      { title: 'Innovator', icon: '💡', gradient: 'green' },
-    ],
-    weeklyGain: 198,
-    specialties: ['Software Engineering', 'AI'],
-  },
-]
-
-const fetchMoreUsers = async () => {
-  const response = await fetch(
-    'https://68d58d52e29051d1c0aefbcd.mockapi.io/users_',
-  )
-  let data = await response.json()
-
-  // Ensure the fetched data has the required properties
-  data = data.map((user: Partial<User>) => ({
-    ...user,
-    rank: user.rank || 0,
-    skillCoins: user.skillCoins || 0,
-    weeklyRank: user.weeklyRank || 0,
-    badges: user.badges || [],
-  }))
-
-  return data as User[]
-}
-
-let allUsersCache: User[] | null = null
-
 export const getAllUsers = async (): Promise<User[]> => {
-  if (!allUsersCache) {
-    const moreUsers = await fetchMoreUsers()
-    allUsersCache = [...manuallyAddedUsers, ...moreUsers]
-  }
-  return allUsersCache
+  const res = await get('/users', { populate: '*' });
+  return formatStrapiCollection(res.data);
 }
 
 export const getTopContributors = async (): Promise<User[]> => {
-  const users = await getAllUsers()
-  return users.slice(0, 3)
+  const res = await get('/users', { populate: '*', 'pagination[limit]': 3, sort: 'skillCoins:desc' });
+  return formatStrapiCollection(res.data);
 }
 
 // API functions for users
 export const getUserProfile = async (userId: number): Promise<User> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 500))
-
-  if (userId === 1) {
-    return currentUser
-  }
-
-  // Return a user from leaderboard for other IDs
-  const users = await getAllUsers()
-  const user = users.find((u: User) => u.id === userId)
-  if (user) {
-    return user
-  }
-
-  throw new Error('User not found')
+  const res = await get(`/users/${userId}`, { populate: '*' });
+  return formatStrapiData(res.data);
 }
 
 export const getCurrentUser = async (): Promise<User> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 300))
-  return currentUser
+  // This should be implemented with authentication
+  // For now, we fetch a specific user
+  const res = await get('/users/1', { populate: '*' });
+  return formatStrapiData(res.data);
 }
 
 export const getLeaderboard = async (limit: number = 10): Promise<User[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 400))
-  const users = await getAllUsers()
-  return users.slice(0, limit)
+  const res = await get('/users', { populate: '*', 'pagination[limit]': limit, sort: 'rank:asc' });
+  return formatStrapiCollection(res.data);
 }
