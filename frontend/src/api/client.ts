@@ -1,46 +1,39 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "http://localhost:1337";
 
-async function fetcher(url: string, options: RequestInit = {}) {
-  const response = await fetch(url, options);
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error.message || 'An error occurred while fetching the data.');
+
+export function formatStrapiData(apiResponse: any): any {
+  if (apiResponse === null || apiResponse === undefined) {
+    return apiResponse;
   }
-  return response.json();
-}
 
-export function getStrapiURL(path = "") {
-  return `${STRAPI_URL}${path}`;
-}
-
-export async function get(path: string, params?: Record<string, any>, options?: RequestInit) {
-  const url = new URL(`/api${path}`, STRAPI_URL);
-  if (params) {
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  if (Array.isArray(apiResponse)) {
+    return apiResponse.map(item => formatStrapiData(item));
   }
-  return await fetcher(url.toString(), options);
+
+  if (typeof apiResponse === 'object') {
+    if ('data' in apiResponse && (apiResponse.data === null || 'id' in apiResponse.data || Array.isArray(apiResponse.data))) {
+       return formatStrapiData(apiResponse.data);
+    }
+    
+    let result: any = {};
+    if ('id' in apiResponse && 'attributes' in apiResponse) {
+      result = {
+        id: apiResponse.id,
+        ...apiResponse.attributes,
+      };
+    } else {
+      result = apiResponse;
+    }
+
+    for (const key in result) {
+      result[key] = formatStrapiData(result[key]);
+    }
+    return result;
+  }
+
+  return apiResponse;
 }
 
-export async function post(path: string, data: any, options?: RequestInit) {
-  const requestUrl = getStrapiURL(`/api${path}`);
-  return await fetcher(requestUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
-    body: JSON.stringify({ data }),
-    ...options,
-  });
-}
-
-export function formatStrapiData(item: any) {
-    if (!item) return null;
-    const { id, attributes } = item;
-    return { id, ...attributes };
-}
-
-export function formatStrapiCollection(items: any[]) {
+export function formatStrapiCollection(items: any) {
     if (!items) return [];
-    return items.map(formatStrapiData);
+    return formatStrapiData(items);
 }

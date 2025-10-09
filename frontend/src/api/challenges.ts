@@ -1,57 +1,59 @@
-import { get, post, formatStrapiCollection, formatStrapiData } from './client';
+import { formatStrapiCollection, formatStrapiData } from './client';
+import { getFromApi, postToApi } from '@/app/actions/api.actions';
+import type { User } from './users';
 
 // Challenge data and related API functions
-export interface Challenge {
-  id: number
-  title: string
-  description: string
-  author: any // Should be a User object
-  authorType?: 'Student' | 'Lecturer' | 'Industry Professional'
-  authorBio?: string
-  upvotes: number
-  responses: Response[]
-  skillCoins: number
-  tags: any[] // Should be Tag objects
-  timeAgo?: string
-  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced'
-  category?: 'Real-world Challenge' | 'Academic Q&A' | 'Industry Problem'
-  createdAt: string;
+export interface Tag {
+  id: number;
+  name: string;
 }
 
 export interface Response {
-  id: number
-  author: any // Should be a User object
-  authorType: 'Student' | 'Lecturer' | 'Industry Professional'
-  university?: string
-  upvotes: number
-  timeAgo: string
-  content: string
-  isAccepted?: boolean
+  id: number;
+  author: User;
+  upvotes: number;
+  createdAt: string;
+  content: string;
+  isAccepted?: boolean;
+}
+
+export interface Challenge {
+  id: number;
+  title: string;
+  description: string;
+  author: User;
+  upvotes: number;
+  responses: Response[];
+  skillCoins: number;
+  tags: Tag[];
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  category: 'Real-world Challenge' | 'Academic Q&A' | 'Industry Problem';
+  createdAt: string;
 }
 
 // Get detailed challenge data with responses
-export const getChallengeDetail = async (id: number): Promise<Challenge> => {
-  const res = await get(`/challenges/${id}`, { populate: 'deep' });
-  const formatted = formatStrapiData(res.data);
+export const getChallengeDetail = async (id: number): Promise<Challenge & { timeAgo: string }> => {
+  const res = await getFromApi(`/challenges/${id}`, {});
+  const formatted: Challenge = formatStrapiData(res.data);
   // The backend doesn't provide timeAgo, so we can calculate it or just use createdAt
   return { ...formatted, timeAgo: new Date(formatted.createdAt).toLocaleDateString() };
 }
 
 // API functions for challenges
-export const getChallenges = async (): Promise<Challenge[]> => {
-  const res = await get('/challenges', { populate: 'deep' });
-  const formatted = formatStrapiCollection(res.data);
+export const getChallenges = async (): Promise<(Challenge & { timeAgo: string })[]> => {
+  const res = await getFromApi('/challenges', {});
+  const formatted: Challenge[] = formatStrapiCollection(res.data);
   return formatted.map((c:any) => ({...c, timeAgo: new Date(c.createdAt).toLocaleDateString()}));
 }
 
 export type ChallengePayload = Omit<
   Challenge,
-  'id' | 'upvotes' | 'responses' | 'timeAgo' | 'createdAt'
->
+  'id' | 'upvotes' | 'responses' | 'createdAt' | 'author'
+> & { author: number };
 
 export const createChallenge = async (
   challengeData: ChallengePayload,
 ): Promise<Challenge> => {
-  const res = await post('/challenges', challengeData);
+  const res = await postToApi('/challenges', { data: challengeData });
   return formatStrapiData(res.data);
 }
