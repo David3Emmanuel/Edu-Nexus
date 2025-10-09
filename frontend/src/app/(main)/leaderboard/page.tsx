@@ -57,6 +57,7 @@ function Avatar({
 export default async function Leaderboard() {
   const topContributors = await getTopContributors()
   const allUsers = await getAllUsers()
+  console.log('allUsers', allUsers)
 
   return (
     <>
@@ -95,7 +96,10 @@ export default async function Leaderboard() {
                   <p className='text-sm text-gray-600 mb-3'>
                     {topContributors[1].university}
                   </p>
-                  <SkillCoin count={topContributors[1].skillCoins} size='md' />
+                  <SkillCoin
+                    count={topContributors[1].skillCoins ?? 0}
+                    size='md'
+                  />
                   <div className='flex justify-center gap-2 mt-4'>
                     {topContributors[1].badges.slice(0, 2).map((badge) => (
                       <Badge key={badge.id} {...badge} size='sm' />
@@ -127,7 +131,7 @@ export default async function Leaderboard() {
                     {topContributors[0].university}
                   </p>
                   <SkillCoin
-                    count={topContributors[0].skillCoins}
+                    count={topContributors[0].skillCoins ?? 0}
                     size='lg'
                     showAnimation
                   />
@@ -158,7 +162,10 @@ export default async function Leaderboard() {
                   <p className='text-sm text-gray-600 mb-3'>
                     {topContributors[2].university}
                   </p>
-                  <SkillCoin count={topContributors[2].skillCoins} size='md' />
+                  <SkillCoin
+                    count={topContributors[2].skillCoins ?? 0}
+                    size='md'
+                  />
                   <div className='flex justify-center gap-2 mt-4'>
                     {topContributors[2].badges.map((badge) => (
                       <Badge key={badge.id} {...badge} size='sm' />
@@ -269,7 +276,7 @@ export default async function Leaderboard() {
                     </td>
 
                     <td className='px-6 py-4 whitespace-nowrap'>
-                      <SkillCoin count={user.skillCoins} size='sm' />
+                      <SkillCoin count={user.skillCoins ?? 0} size='sm' />
                     </td>
 
                     <td className='px-6 py-4 whitespace-nowrap'>

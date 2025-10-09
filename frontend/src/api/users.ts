@@ -34,16 +34,15 @@ export interface User {
 
 export const getAllUsers = async (): Promise<User[]> => {
   const res = await getFromApi('/users', { populate: '*' })
-  return formatStrapiCollection(res.data)
+  return formatStrapiCollection(res)
 }
 
 export const getTopContributors = async (): Promise<User[]> => {
   const res = await getFromApi('/users', {
     populate: '*',
     'pagination[limit]': 3,
-    sort: 'skillCoins:desc',
   })
-  return formatStrapiCollection(res.data)
+  return formatStrapiCollection(res)
 }
 
 // API functions for users
@@ -63,5 +62,5 @@ export const getLeaderboard = async (limit: number = 10): Promise<User[]> => {
     'pagination[limit]': limit,
     sort: 'rank:asc',
   })
-  return formatStrapiCollection(res.data)
+  return formatStrapiCollection(res)
 }
