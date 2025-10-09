@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "responses",
+  "info": {
+    "singularName": "response",
+    "pluralName": "responses",
+    "displayName": "Response"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": false
+    }
+  },
+  "attributes": {
+    "content": {
+      "type": "richtext",
+      "required": true
+    },
+    "challenge": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::challenge.challenge",
+      "inversedBy": "responses"
+    },
+    "upvotes": {
+      "type": "integer",
+      "default": 0
+    },
+    "isAccepted": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

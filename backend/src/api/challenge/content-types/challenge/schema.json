@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "challenges",
+  "info": {
+    "singularName": "challenge",
+    "pluralName": "challenges",
+    "displayName": "Challenge"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": false
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "upvotes": {
+      "type": "integer",
+      "default": 0
+    },
+    "skillCoins": {
+      "type": "integer",
+      "required": true
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "mappedBy": "challenges"
+    },
+    "difficulty": {
+      "type": "enumeration",
+      "enum": [
+        "Beginner",
+        "Intermediate",
+        "Advanced"
+      ]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Real-world Challenge",
+        "Academic Q&A",
+        "Industry Problem"
+      ]
+    },
+    "responses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::response.response",
+      "mappedBy": "challenge"
+    }
+  }
+}

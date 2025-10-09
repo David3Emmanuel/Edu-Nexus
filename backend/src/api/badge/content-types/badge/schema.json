@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "badges",
+  "info": {
+    "singularName": "badge",
+    "pluralName": "badges",
+    "displayName": "Badge"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": false
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "gradient": {
+      "type": "enumeration",
+      "enum": [
+        "blue",
+        "green",
+        "purple",
+        "orange"
+      ]
+    },
+    "users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::user.user",
+      "inversedBy": "badges"
+    }
+  }
+}
