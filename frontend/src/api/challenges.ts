@@ -88,9 +88,10 @@ export const createChallenge = async (
     tags: processedTagIds,
   }
 
-  const res: StrapiSingleResponse<Challenge> = await postToApi('/challenges', {
-    data: strapiPayload,
-  })
+  const res: StrapiSingleResponse<Challenge> = await postToApi(
+    '/challenges',
+    strapiPayload,
+  )
   const newChallenge = formatStrapiData(res)
   if (!newChallenge) {
     throw new Error('Failed to create challenge')
