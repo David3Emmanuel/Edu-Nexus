@@ -6,7 +6,12 @@ import { Input } from '@/components/ui/Input'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import { ChallengePayload, createChallenge, getCurrentUser, User } from '@/api'
+import {
+  ChallengeFormPayload,
+  createChallenge,
+  getCurrentUser,
+  User,
+} from '@/api'
 import { useRouter } from 'next/navigation'
 
 const difficultyOptions = [
@@ -34,15 +39,13 @@ export default function NewChallengePage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
 
-  const [formData, setFormData] = useState<
-    Partial<ChallengePayload> & { tags: string }
-  >({
+  const [formData, setFormData] = useState<Partial<ChallengeFormPayload>>({
     title: '',
     description: '',
     difficulty: 'Intermediate',
     category: 'Academic Q&A',
     skillCoins: 30,
-    tags: '',
+    tags: [],
   })
 
   useEffect(() => {
@@ -132,17 +135,14 @@ export default function NewChallengePage() {
     setSubmitSuccess(false)
 
     try {
-      const payload: ChallengePayload = {
+      const payload: ChallengeFormPayload = {
         title: formData.title!,
         description: formData.description!,
         difficulty: formData.difficulty!,
         category: formData.category!,
         skillCoins: formData.skillCoins!,
         author: user.id,
-        tags: formData.tags
-          .split(',')
-          .map((t) => t.trim())
-          .filter(Boolean),
+        tags: formData.tags || [],
       }
 
       const data = await createChallenge(payload)
@@ -384,7 +384,7 @@ export default function NewChallengePage() {
             </div>
 
             {/* Tag Preview */}
-            {formData.tags.length > 0 && (
+            {formData.tags && formData.tags.length > 0 && (
               <div>
                 <label className='block text-sm font-medium text-gray-700 mb-2'>
                   Tag Preview

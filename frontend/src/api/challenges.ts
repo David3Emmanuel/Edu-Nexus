@@ -1,12 +1,12 @@
-import { formatStrapiCollection, formatStrapiData } from './client'
+import {
+  formatStrapiCollection,
+  formatStrapiData,
+  StrapiSingleResponse,
+  StrapiCollectionResponse,
+} from './client'
 import { getFromApi, postToApi } from '@/app/actions/api.actions'
 import type { User } from './users'
-
-// Challenge data and related API functions
-export interface Tag {
-  id: number
-  name: string
-}
+import { processTags, Tag } from './tags'
 
 export interface Response {
   id: number
@@ -31,39 +31,69 @@ export interface Challenge {
   createdAt: string
 }
 
-// Get detailed challenge data with responses
 export const getChallengeDetail = async (
   id: number,
 ): Promise<Challenge & { timeAgo: string }> => {
-  const res = await getFromApi(`/challenges/${id}`, {})
-  const formatted: Challenge = formatStrapiData(res.data)
-  // The backend doesn't provide timeAgo, so we can calculate it or just use createdAt
+  const res: StrapiSingleResponse<Challenge> = await getFromApi(
+    `/challenges/${id}`,
+    {},
+  )
+  const formatted = formatStrapiData(res)
+  if (!formatted) {
+    throw new Error('Challenge not found')
+  }
   return {
     ...formatted,
     timeAgo: new Date(formatted.createdAt).toLocaleDateString(),
   }
 }
 
-// API functions for challenges
 export const getChallenges = async (): Promise<
   (Challenge & { timeAgo: string })[]
 > => {
-  const res = await getFromApi('/challenges', {})
-  const formatted: Challenge[] = formatStrapiCollection(res.data)
+  const res: StrapiCollectionResponse<Challenge> = await getFromApi(
+    '/challenges',
+    {},
+  )
+  const formatted: Challenge[] = formatStrapiCollection(res)
   return formatted.map((c: Challenge) => ({
     ...c,
     timeAgo: new Date(c.createdAt).toLocaleDateString(),
   }))
 }
 
-export type ChallengePayload = Omit<
+export type ChallengeFormPayload = Omit<
   Challenge,
-  'id' | 'upvotes' | 'responses' | 'createdAt' | 'author'
-> & { author: number }
+  'id' | 'upvotes' | 'responses' | 'createdAt' | 'author' | 'tags'
+> & {
+  author: number
+  tags: string[]
+}
+
+export type ChallengeStrapiPayload = Omit<
+  Challenge,
+  'id' | 'upvotes' | 'responses' | 'createdAt' | 'author' | 'tags'
+> & {
+  author: number
+  tags: number[]
+}
 
 export const createChallenge = async (
-  challengeData: ChallengePayload,
+  challengeData: ChallengeFormPayload,
 ): Promise<Challenge> => {
-  const res = await postToApi('/challenges', { data: challengeData })
-  return formatStrapiData(res.data)
+  const processedTagIds = await processTags(challengeData.tags)
+
+  const strapiPayload: ChallengeStrapiPayload = {
+    ...challengeData,
+    tags: processedTagIds,
+  }
+
+  const res: StrapiSingleResponse<Challenge> = await postToApi('/challenges', {
+    data: strapiPayload,
+  })
+  const newChallenge = formatStrapiData(res)
+  if (!newChallenge) {
+    throw new Error('Failed to create challenge')
+  }
+  return newChallenge
 }

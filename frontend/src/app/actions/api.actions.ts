@@ -33,7 +33,7 @@ const toQueryString = (params: Record<string, QueryParamValue>): string => {
 };
 
 
-async function authenticatedFetch(path: string, options: RequestInit = {}) {
+async function authenticatedFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
     const jwt = (await cookies()).get('jwt')?.value;
     const headers = new Headers(options.headers);
 
@@ -52,19 +52,19 @@ async function authenticatedFetch(path: string, options: RequestInit = {}) {
     return res.json();
 }
 
-export async function getFromApi(path: string, params?: Record<string, QueryParamValue>) {
+export async function getFromApi<T>(path: string, params?: Record<string, QueryParamValue>): Promise<T> {
     let fullPath = path;
     if (params) {
         fullPath += `?${toQueryString(params)}`;
     }
-    return authenticatedFetch(fullPath);
+    return authenticatedFetch<T>(fullPath);
 }
 
-export async function postToApi(path: string, data: object) {
+export async function postToApi<T>(path: string, data: object): Promise<T> {
     const isAuthRequest = path.startsWith('/auth/');
     const body = isAuthRequest ? JSON.stringify(data) : JSON.stringify({ data });
 
-    return authenticatedFetch(path, {
+    return authenticatedFetch<T>(path, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: body,

@@ -1,8 +1,9 @@
 import { formatTimeAgo } from '@/utils/date'
-import { formatStrapiCollection } from './client'
+import { formatStrapiCollection, StrapiCollectionResponse } from './client'
 import { getFromApi } from '@/app/actions/api.actions'
-import type { Challenge, Response, Tag } from './challenges'
+import type { Challenge, Response } from './challenges'
 import type { User, Badge } from './users'
+import { Tag } from './tags'
 
 // Raw activity data from Strapi
 export interface Activity {
@@ -87,10 +88,13 @@ const mapActivityToUiActivity = (activity: Activity): UiActivity => {
 export const getRecentActivity = async (
   limit: number = 10,
 ): Promise<UiActivity[]> => {
-  const res = await getFromApi('/activities', {
-    'pagination[limit]': limit,
-    sort: 'createdAt:desc',
-  })
+  const res = await getFromApi<{ data: StrapiCollectionResponse<Activity> }>(
+    '/activities',
+    {
+      'pagination[limit]': limit,
+      sort: 'createdAt:desc',
+    },
+  )
   const formatted: Activity[] = formatStrapiCollection(res.data)
   return formatted.map(mapActivityToUiActivity)
 }
@@ -99,16 +103,19 @@ export const getUserActivity = async (
   userId: number,
   limit: number = 20,
 ): Promise<UiActivity[]> => {
-  const res = await getFromApi('/activities', {
-    'pagination[limit]': limit,
-    sort: 'createdAt:desc',
-    filters: {
-      user: {
-        id: { $eq: userId },
+  const res = await getFromApi<{ data: StrapiCollectionResponse<Activity> }>(
+    '/activities',
+    {
+      'pagination[limit]': limit,
+      sort: 'createdAt:desc',
+      filters: {
+        user: {
+          id: { $eq: userId },
+        },
       },
+      populate: '*',
     },
-    populate: '*',
-  })
+  )
   const formatted: Activity[] = formatStrapiCollection(res.data)
   return formatted.map(mapActivityToUiActivity)
 }
