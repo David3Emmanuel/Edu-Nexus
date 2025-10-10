@@ -24,9 +24,7 @@ export const getTagByName = async (name: string): Promise<Tag | null> => {
 }
 
 export const createTag = async (name: string): Promise<Tag> => {
-  const res: StrapiSingleResponse<Tag> = await postToApi('/tags', {
-    data: { name },
-  })
+  const res: StrapiSingleResponse<Tag> = await postToApi('/tags', { name })
   const formattedTag = formatStrapiData(res)
   if (!formattedTag) {
     throw new Error('Failed to create tag')
