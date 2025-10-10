@@ -88,7 +88,7 @@ export const createChallenge = async (
     tags: processedTagIds,
   }
 
-  console.log(strapiPayload)
+  console.log('strapiPayload', strapiPayload)
 
   const res: StrapiSingleResponse<Challenge> = await postToApi(
     '/challenges',
