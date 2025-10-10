@@ -77,6 +77,7 @@ export async function postToApi<T>(path: string, data: object): Promise<T> {
   const isAuthRequest = path.startsWith('/auth/')
   const body = isAuthRequest ? JSON.stringify(data) : JSON.stringify({ data })
 
+  console.log(data)
   console.log(body)
 
   return authenticatedFetch<T>(path, {
