@@ -4,6 +4,7 @@ import { Upvote } from '@/components/ui/Upvote'
 import Link from 'next/link'
 import { getChallengeDetail, type Challenge } from '@/api'
 import { notFound } from 'next/navigation'
+import { formatTimeAgo } from '@/utils/date'
 
 interface ChallengeDetailPageProps {
   params: Promise<{
@@ -111,7 +112,7 @@ export default async function ChallengeDetail({
                       </span>
                     </div>
                     <span>•</span>
-                    <span>{challengeData.timeAgo}</span>
+                    <span>{formatTimeAgo(challengeData.createdAt)}</span>
                     <span>•</span>
                     <span>{challengeData.responses.length} responses</span>
                   </div>

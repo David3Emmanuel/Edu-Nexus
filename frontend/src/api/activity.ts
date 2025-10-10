@@ -1,3 +1,4 @@
+import { formatTimeAgo } from '@/utils/date'
 import { formatStrapiCollection } from './client'
 import { getFromApi } from '@/app/actions/api.actions'
 import type { Challenge, Response, Tag } from './challenges'
@@ -29,7 +30,7 @@ export interface UiActivity {
 }
 
 const mapActivityToUiActivity = (activity: Activity): UiActivity => {
-  const timeAgo = new Date(activity.createdAt).toLocaleDateString()
+  const timeAgo = formatTimeAgo(activity.createdAt)
   const base = {
     id: activity.id,
     type: activity.type,
