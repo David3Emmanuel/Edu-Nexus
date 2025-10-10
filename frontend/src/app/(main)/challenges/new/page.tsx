@@ -47,6 +47,7 @@ export default function NewChallengePage() {
     skillCoins: 30,
     tags: [],
   })
+  const [tagsInput, setTagsInput] = useState('')
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -74,10 +75,22 @@ export default function NewChallengePage() {
     >,
   ) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'skillCoins' ? parseInt(value, 10) : value,
-    }))
+
+    if (name === 'tags') {
+      setTagsInput(value)
+      setFormData((prev) => ({
+        ...prev,
+        tags: value
+          .split(',')
+          .map((tag) => tag.trim().toLowerCase().replaceAll(' ', '-'))
+          .filter((tag) => tag.length > 0),
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === 'skillCoins' ? parseInt(value, 10) : value,
+      }))
+    }
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -376,7 +389,7 @@ export default function NewChallengePage() {
                   name='tags'
                   label='Tags'
                   placeholder='e.g., #Engineering, #Sustainability, #Innovation'
-                  value={formData.tags}
+                  value={tagsInput}
                   onChange={handleInputChange}
                   helperText='Separate multiple tags with commas'
                 />
