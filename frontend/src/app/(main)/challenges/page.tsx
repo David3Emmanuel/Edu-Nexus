@@ -190,7 +190,7 @@ export default async function Challenges() {
                           key={tag.id}
                           className='px-2 py-1 bg-gray-100 text-xs rounded-md text-gray-600'
                         >
-                          {tag.name}
+                          #{tag.name}
                         </span>
                       ))}
                     </div>
