@@ -8,7 +8,7 @@ import { Tag } from './tags'
 // Raw activity data from Strapi
 export interface Activity {
   id: number
-  type: 'challenge' | 'answer' | 'badge' | 'upvote'
+  type: 'challenge' | 'response' | 'badge' | 'upvote'
   user: User
   challenge?: Challenge
   response?: Response & { challenge?: Challenge } // Response might be populated with its challenge
@@ -19,7 +19,7 @@ export interface Activity {
 // Activity data formatted for UI components
 export interface UiActivity {
   id: number
-  type: 'challenge' | 'answer' | 'badge' | 'upvote'
+  type: 'challenge' | 'response' | 'badge' | 'upvote'
   title: string
   author: User
   upvotes?: number
@@ -50,7 +50,7 @@ const mapActivityToUiActivity = (activity: Activity): UiActivity => {
         tags: activity.challenge?.tags,
         challengeId: activity.challenge?.id,
       }
-    case 'answer':
+    case 'response':
       return {
         ...base,
         title: `Responded to "${
@@ -63,19 +63,30 @@ const mapActivityToUiActivity = (activity: Activity): UiActivity => {
         ...base,
         title: `Earned a new badge: ${activity.badge?.title || ''}`,
       }
-    case 'upvote':
-      const upvotedItem = activity.challenge || activity.response
-      const upvotedType = activity.challenge ? 'challenge' : 'response'
-      const title = upvotedItem
-        ? (upvotedItem as Challenge).title || 'a post'
-        : 'a post'
+    case 'upvote': {
+      if (activity.challenge) {
+        return {
+          ...base,
+          title: `Upvoted a challenge: "${
+            activity.challenge.title || 'Untitled Challenge'
+          }"`,
+          challengeId: activity.challenge.id,
+        }
+      }
+      if (activity.response) {
+        return {
+          ...base,
+          title: `Upvoted a response in "${
+            activity.response.challenge?.title || 'a challenge'
+          }"`,
+          challengeId: activity.response.challenge?.id,
+        }
+      }
       return {
         ...base,
-        title: `Upvoted a ${upvotedType}: "${title}"`,
-        challengeId:
-          activity.challenge?.id ||
-          (activity.response?.challenge as Challenge)?.id,
+        title: 'Upvoted something',
       }
+    }
     default:
       return {
         ...base,

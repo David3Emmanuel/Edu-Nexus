@@ -96,7 +96,7 @@ export default async function Dashboard() {
                   >
                     <div className='flex items-start gap-4'>
                       <div className='flex-shrink-0'>
-                        {activity.type === 'challenge' ? (
+                        {activity.type === 'challenge' && (
                           <div className='w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center'>
                             <svg
                               className='w-5 h-5 text-primary'
@@ -112,7 +112,8 @@ export default async function Dashboard() {
                               />
                             </svg>
                           </div>
-                        ) : (
+                        )}
+                        {activity.type === 'response' && (
                           <div className='w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center'>
                             <svg
                               className='w-5 h-5 text-secondary'
@@ -129,12 +130,42 @@ export default async function Dashboard() {
                             </svg>
                           </div>
                         )}
+                        {activity.type === 'badge' && (
+                          <div className='w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center'>
+                            <span className='text-xl'>🏆</span>
+                          </div>
+                        )}
+                        {activity.type === 'upvote' && (
+                          <div className='w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center'>
+                            <svg
+                              className='w-5 h-5 text-green-600'
+                              fill='none'
+                              stroke='currentColor'
+                              viewBox='0 0 24 24'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                strokeWidth={2}
+                                d='M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
+                              />
+                            </svg>
+                          </div>
+                        )}
                       </div>
 
                       <div className='flex-1'>
-                        <h3 className='font-medium text-text-dark mb-1 hover:text-primary cursor-pointer'>
-                          {activity.title}
-                        </h3>
+                        {activity.challengeId ? (
+                          <Link href={`/challenges/${activity.challengeId}`}>
+                            <h3 className='font-medium text-text-dark mb-1 hover:text-primary cursor-pointer'>
+                              {activity.title}
+                            </h3>
+                          </Link>
+                        ) : (
+                          <h3 className='font-medium text-text-dark mb-1'>
+                            {activity.title}
+                          </h3>
+                        )}
                         <p className='text-sm text-gray-600 mb-2'>
                           by {activity.author.username}
                         </p>
