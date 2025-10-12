@@ -51,14 +51,15 @@ export const getChallengeDetail = async (
 }
 
 export const getChallenges = async (): Promise<
-  (Challenge & { timeAgo: string })[]
+  (Challenge & { documentId: string; timeAgo: string })[]
 > => {
-  const res: StrapiCollectionResponse<Challenge> = await getFromApi(
-    '/challenges',
-    { populate: ['author', 'tags', 'responses'] },
-  )
-  const formatted: Challenge[] = formatStrapiCollection(res)
-  return formatted.map((c: Challenge) => ({
+  const res: StrapiCollectionResponse<Challenge & { documentId: string }> =
+    await getFromApi('/challenges', {
+      populate: ['author', 'tags', 'responses'],
+    })
+  const formatted: (Challenge & { documentId: string })[] =
+    formatStrapiCollection(res)
+  return formatted.map((c: Challenge & { documentId: string }) => ({
     ...c,
     timeAgo: new Date(c.createdAt).toLocaleDateString(),
   }))

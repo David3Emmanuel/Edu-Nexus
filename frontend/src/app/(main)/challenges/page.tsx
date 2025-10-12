@@ -229,7 +229,7 @@ export default async function Challenges() {
                           </svg>
                           Save
                         </Button>
-                        <Link href={`/challenges/${challenge.id}`}>
+                        <Link href={`/challenges/${challenge.documentId}`}>
                           <Button size='sm'>View Challenge</Button>
                         </Link>
                       </div>
