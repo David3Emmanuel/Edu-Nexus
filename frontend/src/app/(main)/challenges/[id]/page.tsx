@@ -2,9 +2,10 @@ import { Button } from '@/components/ui/Button'
 import { SkillCoin } from '@/components/ui/SkillCoin'
 import { Upvote } from '@/components/ui/Upvote'
 import Link from 'next/link'
-import { getChallengeDetail, type Challenge } from '@/api'
+import { getChallengeDetail, type Challenge, getCurrentUser } from '@/api'
 import { notFound } from 'next/navigation'
 import { formatTimeAgo } from '@/utils/date'
+import { ResponseForm } from '@/components/forms/ResponseForm'
 
 interface ChallengeDetailPageProps {
   params: Promise<{
@@ -12,7 +13,7 @@ interface ChallengeDetailPageProps {
   }>
 }
 
-async function getChallengeData(id: number): Promise<Challenge> {
+async function getChallengeData(id: string): Promise<Challenge> {
   try {
     const challenge = await getChallengeDetail(id)
     return challenge
@@ -25,13 +26,8 @@ export default async function ChallengeDetail({
   params,
 }: ChallengeDetailPageProps) {
   const { id } = await params
-  const challengeId = parseInt(id, 10)
-
-  if (isNaN(challengeId)) {
-    notFound()
-  }
-
-  const challengeData = await getChallengeData(challengeId)
+  const challengeData = await getChallengeData(id)
+  const user = await getCurrentUser()
 
   // Calculate which response is the top answer
   const acceptedResponses = challengeData.responses.filter(
@@ -326,48 +322,21 @@ export default async function ChallengeDetail({
               </div>
 
               {/* Post Answer Form */}
-              <div className='mt-12 pt-8 border-t'>
-                <h3 className='text-xl font-bold text-text-dark mb-4'>
-                  Your Answer
-                </h3>
-                <p className='text-gray-600 mb-6'>
-                  Share your solution and earn{' '}
-                  <SkillCoin count={25} size='sm' /> for a quality answer!
-                </p>
-
-                <div className='space-y-4'>
-                  <textarea
-                    className='w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none'
-                    rows={8}
-                    placeholder='Provide a detailed answer to this challenge. Include technical details, implementation steps, and any supporting evidence...'
-                  />
-
-                  <div className='flex items-center justify-between'>
-                    <div className='flex items-center gap-4'>
-                      <Button variant='outline' size='sm'>
-                        <svg
-                          className='w-4 h-4 mr-2'
-                          fill='none'
-                          stroke='currentColor'
-                          viewBox='0 0 24 24'
-                        >
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            strokeWidth={2}
-                            d='M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13'
-                          />
-                        </svg>
-                        Attach Files
-                      </Button>
-                      <span className='text-sm text-gray-500'>
-                        Markdown supported
-                      </span>
-                    </div>
-                    <Button>Post Answer</Button>
-                  </div>
+              {user ? (
+                <ResponseForm challengeId={challengeData.id} author={user} />
+              ) : (
+                <div className='mt-12 pt-8 border-t text-center'>
+                  <h3 className='text-xl font-bold text-text-dark mb-4'>
+                    Join the conversation
+                  </h3>
+                  <p className='text-gray-600 mb-6'>
+                    You must be logged in to post a response.
+                  </p>
+                  <Link href={`/login?redirect=/challenges/${id}`}>
+                    <Button>Login to Post an Answer</Button>
+                  </Link>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 

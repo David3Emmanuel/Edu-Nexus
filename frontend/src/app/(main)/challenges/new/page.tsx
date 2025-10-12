@@ -164,7 +164,7 @@ export default function NewChallengePage() {
 
       // Show success message briefly before redirecting
       setTimeout(() => {
-        router.push(`/challenges/${data.id}`)
+        router.push(`/challenges/${data.documentId}`)
       }, 1500)
     } catch (error) {
       console.error('Error creating challenge:', error)
