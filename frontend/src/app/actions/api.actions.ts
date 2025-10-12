@@ -56,6 +56,7 @@ async function authenticatedFetch<T>(
   const res = await fetch(url, { ...options, headers })
 
   if (!res.ok) {
+    console.error({ url, options })
     const error = await res.json()
     throw new Error(error.error.message || 'An error occurred.')
   }

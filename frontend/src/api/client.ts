@@ -26,11 +26,9 @@ export function formatStrapiData<T extends object>(
     typeof apiResponse === 'object' &&
     'data' in apiResponse &&
     apiResponse.data !== null &&
-    typeof apiResponse.data === 'object' &&
-    'id' in apiResponse.data &&
-    'attributes' in apiResponse.data
+    typeof apiResponse.data === 'object'
   ) {
-    return formatStrapiData(apiResponse.data as StrapiEntity<T>)
+    return formatStrapiData(apiResponse.data)
   }
 
   // If it's a StrapiEntity, flatten it
