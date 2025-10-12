@@ -55,7 +55,7 @@ export const getChallenges = async (): Promise<
 > => {
   const res: StrapiCollectionResponse<Challenge> = await getFromApi(
     '/challenges',
-    {},
+    { populate: ['author', 'tags', 'responses'] },
   )
   const formatted: Challenge[] = formatStrapiCollection(res)
   return formatted.map((c: Challenge) => ({
