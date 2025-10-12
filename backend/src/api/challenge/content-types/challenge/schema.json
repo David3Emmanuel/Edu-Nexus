@@ -59,6 +59,12 @@
       "relation": "oneToMany",
       "target": "api::activity.activity",
       "mappedBy": "challenge"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "challenges"
     }
   }
 }

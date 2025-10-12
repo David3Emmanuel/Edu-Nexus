@@ -117,6 +117,18 @@
       "relation": "manyToMany",
       "target": "api::specialty.specialty",
       "inversedBy": "users"
+    },
+    "challenges": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::challenge.challenge",
+      "mappedBy": "author"
+    },
+    "responses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::response.response",
+      "mappedBy": "author"
     }
   }
 }

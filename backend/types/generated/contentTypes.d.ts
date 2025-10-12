@@ -560,6 +560,10 @@ export interface ApiChallengeChallenge extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::activity.activity'
     >;
+    author: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     category: Schema.Attribute.Enumeration<
       ['Real-world Challenge', 'Academic Q&A', 'Industry Problem']
     >;
@@ -602,6 +606,10 @@ export interface ApiResponseResponse extends Struct.CollectionTypeSchema {
     activities: Schema.Attribute.Relation<
       'oneToMany',
       'api::activity.activity'
+    >;
+    author: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
     >;
     challenge: Schema.Attribute.Relation<
       'manyToOne',
@@ -1161,6 +1169,10 @@ export interface PluginUsersPermissionsUser
     badges: Schema.Attribute.Relation<'manyToMany', 'api::badge.badge'>;
     bio: Schema.Attribute.Text;
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    challenges: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::challenge.challenge'
+    >;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
@@ -1188,6 +1200,7 @@ export interface PluginUsersPermissionsUser
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
+    responses: Schema.Attribute.Relation<'oneToMany', 'api::response.response'>;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
