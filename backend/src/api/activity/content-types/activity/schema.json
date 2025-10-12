@@ -16,7 +16,7 @@
       "required": true,
       "enum": [
         "challenge",
-        "answer",
+        "response",
         "badge",
         "upvote"
       ]

@@ -495,7 +495,7 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     response: Schema.Attribute.Relation<'manyToOne', 'api::response.response'>;
     type: Schema.Attribute.Enumeration<
-      ['challenge', 'answer', 'badge', 'upvote']
+      ['challenge', 'response', 'badge', 'upvote']
     > &
       Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;

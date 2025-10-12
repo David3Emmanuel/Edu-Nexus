@@ -104,6 +104,7 @@ export const getRecentActivity = async (
     {
       'pagination[limit]': limit,
       sort: 'createdAt:desc',
+      populate: '*',
     },
   )
   const formatted: Activity[] = formatStrapiCollection(res.data)
