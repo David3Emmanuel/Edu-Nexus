@@ -9,7 +9,7 @@ const manrope = Manrope({
 })
 
 export const metadata: Metadata = {
-  title: 'EduNexus - Learn. Apply. Earn. Showcase.',
+  title: 'SabiMind - Learn. Apply. Earn. Showcase.',
   description:
     'A knowledge exchange platform for students and lecturers featuring gamified learning with SkillCoins and Proof-of-Skill Passport.',
 }

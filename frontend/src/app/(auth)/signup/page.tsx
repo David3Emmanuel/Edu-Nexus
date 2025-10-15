@@ -117,7 +117,7 @@ export default function SignupPage() {
       <div className='max-w-break-md w-full space-y-8'>
         <div className='text-center'>
           <h1 className='text-4xl font-extrabold text-gray-900 mb-2'>
-            Join EduNexus
+            Join SabiMind
           </h1>
           <p className='text-gray-600'>
             Start your gamified learning journey today
@@ -344,7 +344,7 @@ export default function SignupPage() {
         {/* Benefits Section */}
         <div className='bg-white rounded-xl shadow-lg p-6 mt-8'>
           <h3 className='text-lg font-bold text-gray-900 mb-4 text-center'>
-            What you&apos;ll get with EduNexus
+            What you&apos;ll get with SabiMind
           </h3>
           <div className='space-y-3'>
             <div className='flex items-center text-sm text-gray-700'>

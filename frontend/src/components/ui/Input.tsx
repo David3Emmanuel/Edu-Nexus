@@ -8,7 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 /**
  * A standard, accessible Input component.
- * Applies the EduNexus design system styling.
+ * Applies the SabiMind design system styling.
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, helperText, className = '', ...rest }, ref) => {

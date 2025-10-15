@@ -327,7 +327,7 @@ export default async function Profile() {
               <h3 className='font-bold text-lg mb-2'>Share Your Profile</h3>
               <p className='text-blue-100 text-sm mb-4'>
                 Show employers your verified skills and achievements from
-                EduNexus.
+                SabiMind.
               </p>
               <Button variant='secondary' size='sm' className='w-full'>
                 Get Shareable Link

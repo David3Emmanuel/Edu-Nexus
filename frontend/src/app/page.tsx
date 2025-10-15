@@ -15,7 +15,7 @@ export default async function Home() {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center h-16'>
             <div className='flex items-center'>
-              <h1 className='text-xl font-extrabold text-primary'>EduNexus</h1>
+              <h1 className='text-xl font-extrabold text-primary'>SabiMind</h1>
             </div>
             <nav className='hidden md:flex space-x-8'>
               <Link
@@ -118,7 +118,7 @@ export default async function Home() {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-4xl font-bold text-text-dark mb-4'>
-              Why Choose EduNexus?
+              Why Choose SabiMind?
             </h2>
             <p className='text-xl text-gray-600 max-w-3xl mx-auto'>
               Our platform combines academic learning with real-world
@@ -202,7 +202,12 @@ export default async function Home() {
               {[
                 { username: 'Aisha Johnson', coins: 2847, rank: 1, badges: 12 },
                 { username: 'Marcus Chen', coins: 2156, rank: 2, badges: 9 },
-                { username: 'Sofia Rodriguez', coins: 1923, rank: 3, badges: 8 },
+                {
+                  username: 'Sofia Rodriguez',
+                  coins: 1923,
+                  rank: 3,
+                  badges: 8,
+                },
               ].map((user, index) => (
                 <div
                   key={index}
@@ -267,7 +272,7 @@ export default async function Home() {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='grid grid-cols-1 md:grid-cols-4 gap-8'>
             <div>
-              <h3 className='text-xl font-bold text-white mb-4'>EduNexus</h3>
+              <h3 className='text-xl font-bold text-white mb-4'>SabiMind</h3>
               <p className='text-gray-400'>
                 Empowering students through knowledge exchange and skill
                 development.
@@ -355,7 +360,7 @@ export default async function Home() {
           </div>
           <div className='border-t border-gray-700 mt-12 pt-8 text-center'>
             <p className='text-gray-400'>
-              © 2024 EduNexus. All rights reserved.
+              © 2024 SabiMind. All rights reserved.
             </p>
           </div>
         </div>
