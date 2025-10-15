@@ -196,7 +196,7 @@ export default async function Challenges() {
                     </div>
 
                     {/* Challenge Footer */}
-                    <div className='flex items-center justify-between'>
+                    <div className='flex items-center justify-between flex-wrap gap-y-4'>
                       <div className='flex items-center gap-4 text-sm text-gray-500'>
                         <span>
                           by{' '}
@@ -247,27 +247,6 @@ export default async function Challenges() {
             Load More Challenges
           </Button>
         </div>
-      </div>
-
-      {/* Floating Action Button (Mobile) */}
-      <div className='fixed bottom-6 right-6 sm:hidden'>
-        <Link href='/challenges/new'>
-          <button className='w-14 h-14 bg-primary text-white rounded-full shadow-lg hover:bg-blue-600 transition-colors flex items-center justify-center'>
-            <svg
-              className='w-6 h-6'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M12 4v16m8-8H4'
-              />
-            </svg>
-          </button>
-        </Link>
       </div>
     </>
   )
