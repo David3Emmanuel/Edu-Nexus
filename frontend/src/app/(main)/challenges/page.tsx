@@ -138,9 +138,9 @@ export default async function Challenges() {
               key={challenge.id}
               className='bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow'
             >
-              <div className='p-6'>
+              <div className='p-6 max-sm:px-1'>
                 {/* Challenge Header */}
-                <div className='flex items-start gap-4 mb-4'>
+                <div className='flex items-start gap-1 sm:gap-4 mb-4'>
                   <div className='flex-shrink-0'>
                     <Upvote initialCount={challenge.upvotes} />
                   </div>
@@ -167,9 +167,8 @@ export default async function Challenges() {
                       >
                         {challenge.difficulty}
                       </span>
-                      <div className='flex items-center gap-1'>
+                      <div className='flex-1 flex justify-end gap-1 pr-4'>
                         <SkillCoin count={challenge.skillCoins} size='sm' />
-                        <span className='text-xs text-gray-500'>reward</span>
                       </div>
                     </div>
 
@@ -197,7 +196,7 @@ export default async function Challenges() {
 
                     {/* Challenge Footer */}
                     <div className='flex items-center justify-between flex-wrap gap-y-4'>
-                      <div className='flex items-center gap-4 text-sm text-gray-500'>
+                      <div className='flex items-center gap-1 sm:gap-4 text-sm text-gray-500 flex-wrap'>
                         <span>
                           by{' '}
                           <span className='font-medium'>
