@@ -173,7 +173,7 @@ export default async function Challenges() {
                       </div>
                     </div>
 
-                    <Link href={`/challenges/${challenge.id}`}>
+                    <Link href={`/challenges/${challenge.documentId}`}>
                       <h2 className='text-xl font-bold text-text-dark hover:text-primary cursor-pointer mb-3 leading-tight'>
                         {challenge.title}
                       </h2>
